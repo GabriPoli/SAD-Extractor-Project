@@ -1,0 +1,134 @@
+/* Paleta Conceitual: 
+   Fundo: #f0f4f8 (Branco/Cinza muito claro)
+   Texto Principal: #334e68 (Azul Escuro)
+   Destaque/Botões: #007bff (Azul Primário)
+*/
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8; 
+    
+    /* 1. RESTAURAÇÃO DA IMAGEM DE FUNDO */
+    background-image: url('/SAD-Extractor-Project/Arquivos_Adicionais/SecretariaAdministracao-PE.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    
+    /* 2. AJUSTE PARA ALINHAMENTO À ESQUERDA */
+    display: flex;
+    justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    position: relative;
+    padding-left: 10%; /* Adiciona um espaço de margem à esquerda para o formulário */
+}
+
+/* Cria o Degradê Claro (Overlay) sobre a imagem para garantir a legibilidade */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Degradê claro/branco de baixa opacidade para sutilizar a imagem [3, 4] e manter o tema light */
+    background: rgba(255, 255, 255, 0.70);
+    z-index: -1;
+}
+
+.login-container {
+    background: white; /* Contêiner branco para contraste com o overlay */
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    /* Alinha o conteúdo interno (textos e inputs) à esquerda */
+    text-align: left; 
+    color: #334e68; 
+    z-index: 10;
+}
+
+.login-header h1 {
+    color: #007bff; /* Título em azul */
+    font-size: 2em;
+    margin-bottom: 5px;
+    /* Garante que o H1 esteja alinhado à esquerda dentro do container */
+    text-align: left; 
+}
+
+.login-header p {
+    color: #6c757d;
+    font-size: 0.9em;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #334e68;
+}
+
+/* Inputs Limpos para Tema Claro */
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    background: #ffffff; /* Fundo branco para os campos */
+    color: #333;
+    border: 1px solid #ced4da; /* Borda cinza clara */
+    border-radius: 8px;
+    box-sizing: border-box; 
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #007bff; /* Borda azul no foco */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); /* Sombra suave azulada */
+}
+
+/* Botão Principal: Mantendo o Gradiente Azul Chamativo */
+button {
+    width: 100%;
+    padding: 14px;
+    /* Gradiente em tons de azul/ciano, seguindo a paleta de destaque */
+    background: linear-gradient(90deg, #007bff 0%, #1e90ff 50%, #00ffff 100%); 
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1em;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.forgot-password, .signup-link {
+    display: block;
+    margin-top: 15px;
+    color: #007bff; /* Links em azul */
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.3s;
+    text-align: right;
+}
+
+/* Garante que os links de senha e cadastro permaneçam alinhados à direita */
+.forgot-password, .signup-link {
+    /* ... estilos de texto ... */
+    text-align: right;
+}
+.forgot-password:hover, .signup-link:hover {
+    color: #1e90ff;
+}
