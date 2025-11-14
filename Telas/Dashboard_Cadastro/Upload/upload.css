@@ -1,0 +1,259 @@
+/* upload-styles.css - Estilo Azul Moderno para Tela G */
+
+/* Paleta Azul: #007bff (Primário), #1e90ff (Acento), #f0f8ff (Fundo leve) */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Fundo muito claro, replicando o figma [1, 2] */
+    margin: 0;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ----------------------------------
+   1. NavBar e Menu (Predominantemente Azul)
+   ---------------------------------- */
+
+.navbar {
+    background-color: #007bff; /* Azul primário forte */
+    color: white;
+    padding: 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-text {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.subtitle-text {
+    font-size: 0.8em;
+    opacity: 0.8;
+}
+
+/* Menu de Navegação Horizontal */
+.main-menu {
+    display: flex;
+    align-items: center;
+    padding: 10px 40px;
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.menu-item {
+    text-decoration: none;
+    color: #555;
+    padding: 8px 15px;
+    margin-right: 15px;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+/* Destaque Azul para o item ativo, como no Figma [1, 2] */
+.menu-item.active {
+    color: #007bff; 
+    border-bottom: 3px solid #007bff;
+    font-weight: 600;
+}
+
+.user-info {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    margin-left: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: #007bff; /* Azul para o avatar */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+/* ----------------------------------
+   2. Stepper (Indicador de Progresso)
+   ---------------------------------- */
+
+.content-wrapper {
+    padding: 30px 40px;
+    flex-grow: 1; /* Ocupa o espaço restante */
+}
+
+.stepper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100px;
+}
+
+.step-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: white;
+    background-color: #ced4da; /* Cinza inativo */
+    transition: background-color 0.3s;
+}
+
+/* O gradiente verde/azul no passo ativo simula o destaque moderno, conforme o exemplo [1, 2] */
+.step.active .step-circle {
+    background: linear-gradient(45deg, #28a745, #1e90ff); /* Verde (Figma [1, 2]) misturado com Azul (Nova Paleta) */
+}
+
+.step-label {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.progress-line {
+    height: 4px;
+    width: 100px;
+    background-color: #ced4da;
+    margin: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.progress-line.active {
+    background-color: #28a745; /* Linha de progresso ativa */
+}
+
+
+/* ----------------------------------
+   3. Área de Upload (Drop Zone)
+   ---------------------------------- */
+
+.upload-section h2 {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.upload-section .subtitle {
+    color: #6c757d;
+    margin-bottom: 25px;
+}
+
+.drop-zone {
+    /* Estilo da Captura de tela [1, 2]: Borda tracejada azul clara */
+    border: 2px dashed #a0c3ff;
+    background-color: #e6f7ff; /* Fundo azul muito claro */
+    border-radius: 12px;
+    padding: 60px 20px;
+    text-align: center;
+    transition: background-color 0.3s, border-color 0.3s;
+    cursor: pointer;
+}
+
+.drop-zone.drag-over {
+    background-color: #d1ecf1;
+    border-color: #007bff;
+}
+
+.upload-icon {
+    font-size: 4em;
+    color: #007bff;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.drop-zone a {
+    color: #007bff; /* Clique para selecionar em Azul */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.formats {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 10px;
+}
+
+/* --- Lista de Arquivos --- */
+.file-list {
+    list-style: none;
+    padding: 10px 0; /* Aumenta o padding interno */
+    max-height: 200px;
+    overflow-y: auto;
+    /* Fundo branco ou claro para que o verde do arquivo se destaque */
+    background: white; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.file-list li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95em;
+}
+
+/* --- Estilo de Visualização do Arquivo (Fundo Verde e Check) --- */
+
+.file-info {
+    /* Fundo verde suave para sinalizar 'Importado com Sucesso' */
+    background-color: #d4edda; 
+    color: #155724; /* Texto em verde escuro para contraste */
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    /* Sombra sutil para destacar o elemento */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.check-icon {
+    /* Estilização do checkmark */
+    margin-right: 8px;
+    color: #28a745; /* Verde de sucesso forte */
+    font-size: 1.1em;
+}
+
+/* --- Estilização Melhorada do Botão de Remover --- */
+
+.remove-file-btn {
+    /* Aparência mais compacta e visualmente distinta (Cor de Perigo) */
+    background: none;
+    color: #dc3545; /* Vermelho padrão para ação de remover */
+    border: 1px solid #dc3545;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.remove-file-btn:hover {
+    /* Efeito de hover: fundo vermelho, texto branco */
+    background-color: #dc3545;
+    color: white;
+}

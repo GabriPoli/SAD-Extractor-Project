@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>SAD-Extractor | Login</title>
+    <!-- Link para o CSS Moderno e Fluido -->
+    <link rel="stylesheet" href="telaLogin.css">
+</head>
+<body>
+    <!-- O contêiner principal utiliza Flexbox para centralizar, conforme princípio [3] -->
+    <div class="login-container">
+        <header class="login-header">
+            <h1>SAD-Extractor</h1>
+            <p>Sistema de Extração e Visualização de Dados de Laudos</p>
+        </header>
+
+        <form id="loginForm" class="login-form">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required placeholder="Digite seu e-mail">
+            </div>
+            
+            <div class="input-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" required placeholder="******">
+            </div>
+            
+            <a href="#" class="forgot-password">Esqueci minha senha</a>
+
+            <button type="submit" id="submitBtn">Entrar</button>
+            
+            <!-- Link adicional do exemplo -->
+            <a href="#" class="signup-link">Ainda não tenho uma conta</a>
+        </form>
+    </div>
+    <!-- Script para a Lógica de Redirecionamento (Conforme Requisito) -->
+    <script src="telaLogin.js"></script>
+</body>
+</html>
