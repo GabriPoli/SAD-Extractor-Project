@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="edicao.css">
     </head>
     <body>
-        
+
         <nav class="navbar">
             <div class="navbar-left">
                 <span class="logo-text">SAD Extractor</span>
@@ -50,21 +50,20 @@
             </div>
         </div>
 
-        <div class="edit-section">
-            <h2>Edição dos dados extraídos</h2>
-            <p class="subtitle">Revise o resumo dos dados extraídos a partir dos laudos</p>
-
+        <div class="edit-section">    
+            <div class="page-header-card">
+                <h2>Edição dos dados extraídos</h2>
+                <p class="subtitle">Revise o resumo dos dados extraídos a partir dos laudos</p>
+            </div>
             <main class="card" id="editor">
-                
                 <header class="card-header">
                     <h3>Tabela padrão</h3>
                 </header>
-
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th></th> <th>ID</th>
                                 <th>Nome do arquivo</th>
                                 <th>Dados extraídos</th>
                                 <th>%</th>
@@ -73,7 +72,7 @@
                                 <th></th> </tr>
                         </thead>
                         <tbody id="table-body">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
 
@@ -82,9 +81,9 @@
                         <button type="button" class="btn-link" id="select-all-text">Selecionar tudo</button>
                         <button type="button" class="btn-link" id="deselect-all-text">Excluir tudo</button>
                     </div>
-
+                
                     <div class="pagination-controls" id="pagination-container">
-                        </div>
+                    </div>
                 </footer>
             </main>
         </div>
@@ -92,6 +91,87 @@
             <span id="selected-count-balloon">Nenhum laudo selecionado</span>
             <button id="validate-data-btn" class="btn-primary">Validar Dados</button>
         </div>
-        <script src="edicao.js"></script>
-    </body>
+        <template id="template-modal-confirmacao">
+            <div id="confirmation-modal" class="modal-overlay hidden">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h2>Confirmar Ação</h2>
+                        <button id="modal-close-btn" class="modal-close">&times;</button>
+                    </header>
+                    <div class="modal-body">
+                        <p>Tem certeza que deseja validar os dados dos laudos?</p>
+                        <p class="warning">Uma vez validado não será possível editar o laudo</p>
+                    </div>
+                    <footer class="modal-footer">
+                        <button id="modal-confirm-validate" class="btn-primary">Validar Dados</button>
+                    </footer>
+                </div>
+            </div>
+        </template>
+        <template id="template-modal-detalhes">
+            <div id="details-modal" class="modal-overlay hidden">
+                <div class="modal-content-details">
+                    <header class="modal-header-details">
+                        <h2 id="details-title"></h2>
+                        <button id="details-close-btn" class="btn-primary">Voltar</button>
+                    </header>
+                        <p class="subtitle-details">Informações completas extraídas do documento</p>
+                        <div id="details-modal-body" class="modal-body-details">
+                        <h3>Dados sobre Localização do Imóvel</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item"><label>Endereço</label><span id="detail-loc_endereco"></span></div>
+                            <div class="detail-item"><label>Número</label><span id="detail-loc_numero"></span></div>
+                            <div class="detail-item"><label>Complemento</label><span id="detail-loc_complemento"></span></div>
+                            <div class="detail-item"><label>Bairro</label><span id="detail-loc_bairro"></span></div>
+                            <div class="detail-item"><label>CEP</label><span id="detail-loc_cep"></span></div>
+                            <div class="detail-item"><label>País</label><span id="detail-loc_pais"></span></div>
+                            <div class="detail-item"><label>Estado</label><span id="detail-loc_estado"></span></div>
+                            <div class="detail-item"><label>Cidade/Município</label><span id="detail-loc_cidade"></span></div>
+                            <div class="detail-item"><label>Região</label><span id="detail-loc_regiao"></span></div>
+                            <div class="detail-item"><label>Confrontante frente</label><span id="detail-loc_confFrente"></span></div>
+                            <div class="detail-item"><label>Confrontante fundo</label><span id="detail-loc_confFundo"></span></div>
+                            <div class="detail-item"><label>Confrontante L. direita</label><span id="detail-loc_confDireita"></span></div>
+                            <div class="detail-item"><label>Confrontante L. esquerda</label><span id="detail-loc_confEsquerda"></span></div>
+                            <div class="detail-item"><label>Ponto de referência</label><span id="detail-loc_pontoRef"></span></div>
+                            <div class="detail-item"><label>Observação</label><span id="detail-loc_obs"></span></div>
+                            <div class="detail-item"><label>Coordenada geográfica S</label><span id="detail-loc_coordS"></span></div>
+                            <div class="detail-item"><label>Coordenada geográfica W</label><span id="detail-loc_coordW"></span></div>
+                        </div>
+
+                        <h3>Características do Imóvel</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item"><label>Área do terreno</label><span id="detail-carac_areaTerreno"></span></div>
+                            <div class="detail-item"><label>Área construída</label><span id="detail-carac_areaConstruida"></span></div>
+                            <div class="detail-item"><label>Unidade de medida</label><span id="detail-carac_unidadeMedida"></span></div>
+                            <div class="detail-item"><label>Estado de conservação</label><span id="detail-carac_estadoConserv"></span></div>
+                            <div class="detail-item"><label>Limitação administrativa</label><span id="detail-carac_limitAdmin"></span></div>
+                        </div>
+
+                        <h3>Dados Financeiros</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item"><label>Critério de valoração</label><span id="detail-fin_critVal"></span></div>
+                            <div class="detail-item"><label>Data da valoração</label><span id="detail-fin_dataVal"></span></div>
+                            <div class="detail-item"><label>Nº do documento</label><span id="detail-fin_numDoc"></span></div>
+                            <div class="detail-item"><label>Valor da construção nova</label><span id="detail-fin_valConstNova"></span></div>
+                            <div class="detail-item"><label>Valor da área construída</label><span id="detail-fin_valAreaConst"></span></div>
+                            <div class="detail-item"><label>Valor do terreno</label><span id="detail-fin_valTerreno"></span></div>
+                            <div class="detail-item"><label>Valor total</label><span id="detail-fin_valTotal"></span></div>
+                            <div class="detail-item"><label>Observação</label><span id="detail-fin_obs"></span></div>
+                        </div>
+                    </div>
+                
+                    <footer class="modal-footer-details">
+                        <div>
+                            <span id="edit-status-default" class="edit-status-default">*Dados editados pelo usuário</span>
+                            <span id="edit-success-msg" class="edit-success hidden">✓ Dados editados</span>
+                        </div>
+                        <button id="modal-edit-btn" class="btn-primary">Editar Dados</button>
+                    </footer>
+                </div>
+            </div>
+        </template>
+
+    <script src="edicao.js"></script>
+
+</body>
 </html>
