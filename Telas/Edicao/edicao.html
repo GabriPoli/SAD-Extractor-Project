@@ -1,177 +1,132 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <title>SAD-Extractor | Edição</title>
-        <link rel="stylesheet" href="edicao.css">
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAD-Extractor | Edição de Dados</title>
+    <link rel="stylesheet" href="edicao.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
 
-        <nav class="navbar">
-            <div class="navbar-left">
-                <span class="logo-text">SAD Extractor</span>
-                <span class="subtitle-text">Sistema de Extração de dados imobiliários</span>
+    <header class="main-header">
+        <div class="header-top container-full">
+            <div class="header-brand">
+                <div class="logo-box">
+                    <svg class="icon-doc" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <div class="brand-text">
+                        <h1>SAD Extractor</h1>
+                        <span>Sistema de Extração de dados imobiliários</span>
+                    </div>
+                </div>
             </div>
-            <div class="navbar-right">
-                <img src="/images/logoSADGovPE.png" alt="Secretaria de Administração" class="sad-logo">
+            <div class="header-logos">
+                <img src="/images/logoSADGovPE.png" alt="Governo de Pernambuco" class="gov-logo"> 
             </div>
-        </nav>
-    
-        <div class="main-menu">
-            <a href="#" class="menu-item">Upload de documentos</a>
-            <a href="#" class="menu-item active">Editar dados</a>
-            <a href="#" class="menu-item">Histórico de Laudos</a>
-            <a href="#" class="menu-item">Histórico de usuários</a>
-            <a href="#" class="menu-item">Indicadores</a>
+        </div>
+
+        <div class="header-nav container-full">
+            <nav class="nav-links">
+                <a href="#">Upload de documentos</a>
+                <span class="divider">|</span>
+                <a href="#" class="active">Editar dados</a> <span class="divider">|</span>
+                <a href="#">Histórico de Laudos</a>
+                <span class="divider">|</span>
+                <a href="#">Histórico de usuários</a>
+                <span class="divider">|</span>
+                <a href="#">Indicadores</a>
+                <span class="divider">|</span>
+                <a href="#">Configurações</a>
+            </nav>
             <div class="user-info">
-                <span>Olá, Nome do usuário</span>
+                <span>Olá, <strong>Nome do usuário</strong></span>
                 <div class="avatar">TT</div>
+                <span class="dropdown-arrow">▼</span>
             </div>
         </div>
+    </header>
 
-        <div class="content-wrapper">
+    <div class="app-container">
         
-
-            <div class="stepper">
-                <div class="step active completed">
-                    <span class="step-circle">1</span>
-                    <span class="step-label">Upload</span>
-                </div>
-                <div class="progress-line active"></div>
-                <div class="step active completed">
-                    <span class="step-circle">2</span>
-                    <span class="step-label">Edição</span>
-                </div>
-                <div class="progress-line"></div>
-                <div class="step">
-                    <span class="step-circle">3</span>
-                    <span class="step-label">Exportação</span>
-                </div>
+        <div class="stepper-container">
+            <div class="step completed">
+                <div class="step-circle">1</div>
+                <span class="step-label">Upload</span>
+            </div>
+            <div class="step-line completed"></div>
+            <div class="step active">
+                <div class="step-circle">2</div>
+                <span class="step-label">Edição</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <span class="step-label">Exportação</span>
             </div>
         </div>
 
-        <div class="edit-section">    
-            <div class="page-header-card">
+        <div class="main-card">
+            
+            <div class="page-header">
                 <h2>Edição dos dados extraídos</h2>
-                <p class="subtitle">Revise o resumo dos dados extraídos a partir dos laudos</p>
+                <p>Revise o resumo dos dados extraídos a partir dos laudos</p>
             </div>
-            <main class="card" id="editor">
-                <header class="card-header">
-                    <h3>Tabela padrão</h3>
-                </header>
-                <div class="table-container">
+
+            <div class="table-card-inner">
+                <div class="table-header-title">
+                    <h4>Tabela padrão</h4>
+                </div>
+                <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th></th> <th>ID</th>
-                                <th>Nome do arquivo</th>
-                                <th>Dados extraídos</th>
-                                <th>%</th>
-                                <th>Confiabilidade</th>
+                                <th width="40"></th> 
+                                <th>ID</th>
+                                <th>Nome do arquivo <span class="sort-icon">⇅</span></th>
+                                <th>Dados extraídos <span class="sort-icon">⇅</span></th>
+                                <th>% <span class="sort-icon">⇅</span></th>
+                                <th>Confiabilidade <span class="sort-icon">⇅</span></th>
                                 <th>Ação recomendada</th>
-                                <th></th> </tr>
+                                <th width="40"></th> 
+                            </tr>
                         </thead>
                         <tbody id="table-body">
+                            <!-- Dados serão inseridos via JavaScript -->
                         </tbody>
                     </table>
                 </div>
 
-                <footer class="card-footer">
-                    <div class="footer-actions">
-                        <button type="button" class="btn-link" id="select-all-text">Selecionar tudo</button>
-                        <button type="button" class="btn-link" id="deselect-all-text">Excluir tudo</button>
+                <div class="table-footer">
+                    <div class="footer-left">
+                        <span class="action-link" id="select-all-text">Selecionar tudo</span>
+                        <span class="action-link danger" id="deselect-all-text">Excluir tudo</span>
                     </div>
-                
-                    <div class="pagination-controls" id="pagination-container">
-                    </div>
-                </footer>
-            </main>
-        </div>
-        <div class="footer-bar">
-            <span id="selected-count-balloon">Nenhum laudo selecionado</span>
-            <button id="validate-data-btn" class="btn-primary">Validar Dados</button>
-        </div>
-        <template id="template-modal-confirmacao">
-            <div id="confirmation-modal" class="modal-overlay hidden">
-                <div class="modal-content">
-                    <header class="modal-header">
-                        <h2>Confirmar Ação</h2>
-                        <button id="modal-close-btn" class="modal-close">&times;</button>
-                    </header>
-                    <div class="modal-body">
-                        <p>Tem certeza que deseja validar os dados dos laudos?</p>
-                        <p class="warning">Uma vez validado não será possível editar o laudo</p>
-                    </div>
-                    <footer class="modal-footer">
-                        <button id="modal-confirm-validate" class="btn-primary">Validar Dados</button>
-                    </footer>
+                    <div id="pagination-wrapper" class="footer-right"></div>
                 </div>
             </div>
-        </template>
-        <template id="template-modal-detalhes">
-            <div id="details-modal" class="modal-overlay hidden">
-                <div class="modal-content-details">
-                    <header class="modal-header-details">
-                        <h2 id="details-title"></h2>
-                        <button id="details-close-btn" class="btn-primary">Voltar</button>
-                    </header>
-                        <p class="subtitle-details">Informações completas extraídas do documento</p>
-                        <div id="details-modal-body" class="modal-body-details">
-                        <h3>Dados sobre Localização do Imóvel</h3>
-                        <div class="detail-grid">
-                            <div class="detail-item"><label>Endereço</label><span id="detail-loc_endereco"></span></div>
-                            <div class="detail-item"><label>Número</label><span id="detail-loc_numero"></span></div>
-                            <div class="detail-item"><label>Complemento</label><span id="detail-loc_complemento"></span></div>
-                            <div class="detail-item"><label>Bairro</label><span id="detail-loc_bairro"></span></div>
-                            <div class="detail-item"><label>CEP</label><span id="detail-loc_cep"></span></div>
-                            <div class="detail-item"><label>País</label><span id="detail-loc_pais"></span></div>
-                            <div class="detail-item"><label>Estado</label><span id="detail-loc_estado"></span></div>
-                            <div class="detail-item"><label>Cidade/Município</label><span id="detail-loc_cidade"></span></div>
-                            <div class="detail-item"><label>Região</label><span id="detail-loc_regiao"></span></div>
-                            <div class="detail-item"><label>Confrontante frente</label><span id="detail-loc_confFrente"></span></div>
-                            <div class="detail-item"><label>Confrontante fundo</label><span id="detail-loc_confFundo"></span></div>
-                            <div class="detail-item"><label>Confrontante L. direita</label><span id="detail-loc_confDireita"></span></div>
-                            <div class="detail-item"><label>Confrontante L. esquerda</label><span id="detail-loc_confEsquerda"></span></div>
-                            <div class="detail-item"><label>Ponto de referência</label><span id="detail-loc_pontoRef"></span></div>
-                            <div class="detail-item"><label>Observação</label><span id="detail-loc_obs"></span></div>
-                            <div class="detail-item"><label>Coordenada geográfica S</label><span id="detail-loc_coordS"></span></div>
-                            <div class="detail-item"><label>Coordenada geográfica W</label><span id="detail-loc_coordW"></span></div>
-                        </div>
 
-                        <h3>Características do Imóvel</h3>
-                        <div class="detail-grid">
-                            <div class="detail-item"><label>Área do terreno</label><span id="detail-carac_areaTerreno"></span></div>
-                            <div class="detail-item"><label>Área construída</label><span id="detail-carac_areaConstruida"></span></div>
-                            <div class="detail-item"><label>Unidade de medida</label><span id="detail-carac_unidadeMedida"></span></div>
-                            <div class="detail-item"><label>Estado de conservação</label><span id="detail-carac_estadoConserv"></span></div>
-                            <div class="detail-item"><label>Limitação administrativa</label><span id="detail-carac_limitAdmin"></span></div>
-                        </div>
-
-                        <h3>Dados Financeiros</h3>
-                        <div class="detail-grid">
-                            <div class="detail-item"><label>Critério de valoração</label><span id="detail-fin_critVal"></span></div>
-                            <div class="detail-item"><label>Data da valoração</label><span id="detail-fin_dataVal"></span></div>
-                            <div class="detail-item"><label>Nº do documento</label><span id="detail-fin_numDoc"></span></div>
-                            <div class="detail-item"><label>Valor da construção nova</label><span id="detail-fin_valConstNova"></span></div>
-                            <div class="detail-item"><label>Valor da área construída</label><span id="detail-fin_valAreaConst"></span></div>
-                            <div class="detail-item"><label>Valor do terreno</label><span id="detail-fin_valTerreno"></span></div>
-                            <div class="detail-item"><label>Valor total</label><span id="detail-fin_valTotal"></span></div>
-                            <div class="detail-item"><label>Observação</label><span id="detail-fin_obs"></span></div>
-                        </div>
-                    </div>
-                
-                    <footer class="modal-footer-details">
-                        <div>
-                            <span id="edit-status-default" class="edit-status-default">*Dados editados pelo usuário</span>
-                            <span id="edit-success-msg" class="edit-success hidden">✓ Dados editados</span>
-                        </div>
-                        <button id="modal-edit-btn" class="btn-primary">Editar Dados</button>
-                    </footer>
+            <div class="card-bottom-actions">
+                <div class="selected-badge-container">
+                    <div id="selected-count-badge" class="selected-badge hidden">0 laudos selecionados</div>
                 </div>
+                <button id="btn-validate" class="btn-primary-large" disabled>Validar Dados</button>
             </div>
-        </template>
+
+        </div> 
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirmation-modal" class="modal-overlay hidden">
+        <div class="modal-content modal-delete">
+            <h3>Confirmar Ação</h3>
+            <p id="modal-message">Tem certeza que deseja excluir este item?</p>
+            <div class="modal-actions">
+                <button id="btn-cancel-delete" class="btn-secondary">Cancelar</button>
+                <button id="btn-confirm-delete" class="btn-danger">Excluir</button>
+            </div>
+        </div>
+    </div>
 
     <script src="edicao.js"></script>
-
 </body>
 </html>
