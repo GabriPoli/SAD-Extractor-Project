@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAD Extractor - Configuração de Contas</title>
+    <link rel="stylesheet" href="TelaGerenciamento.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <span class="logo-text">SAD Extractor</span>
+            <span class="subtitle-text">Sistema de Extração de dados imobiliários</span>
+        </div>
+        <div class="navbar-right">
+            <img src="/images/logoSADGovPE.png" alt="Secretaria de Administração" class="sad-logo">
+        </div>
+    </nav>
+    
+    <div class="main-menu">
+        <a href="#" class="menu-item">Upload de documentos</a>
+        <a href="#" class="menu-item">Editar dados</a>
+        <a href="#" class="menu-item">Histórico de Laudos</a>
+        <a href="#" class="menu-item">Histórico de usuários</a>
+        <a href="#" class="menu-item">Indicadores</a>
+        <a href="#" class="menu-item active">Gerenciamento de usuários</a>
+        <div class="user-info">
+            <span>Olá, Nome do usuário</span>
+            <div class="avatar">TT</div>
+        </div>
+    </div>
+
+    <main class="container main-content">
+        <div class="card">
+
+            <h2 class="card-title">
+                Configurações e cadastros dos usuários no sistema
+            </h2>
+
+            <section class="new-user-section" style="margin-bottom: 2rem;">
+                <h3>Novo usuário</h3>
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label for="newUserNameInput">Nome</label>
+                        <input type="text" id="newUserNameInput"  placeholder="Nome completo">
+                    </div>
+                    <div class="form-group" style="min-width: 250px;">
+                        <label for="newUserEmailInput">Email</label>
+                        <input type="email" id="newUserEmailInput" placeholder="email@sad.pe.gov.br">
+                    </div>
+                    <div class="form-group">
+                        <label for="newUserRoleSelect">Função</label>
+                        <select id="newUserRoleSelect">
+                            <option value="" disabled selected>Selecione o cargo</option>
+                            <option value="Cadastro">Usuário Cadastral</option>
+                            <option value="Gestão">Usuário Gestor</option>
+                            <option value="Administrador">Usuário Administrador</option>
+                        </select>
+                    </div>
+                    <button id="createUserButton" class="btn btn-create">
+                        <i class="fas fa-plus" style="margin-right: 0.25rem;"></i> Criar
+                    </button>
+                </div>
+            </section>
+
+            <section class="table-section">
+                <h3>Tabela padrão</h3>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="sortable-header" data-column="id">
+                                    ID <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header" data-column="nome">
+                                    Nome <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header" data-column="email">
+                                    E-mail <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header" data-column="tipo">
+                                    Tipo <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header" data-column="ultimo_acesso">
+                                    Último acesso <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header text-center" data-column="total_acessos">
+                                    Total de acessos <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="text-center">
+                                    Ações
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody> 
+                    </table>
+                </div>
+
+                <div id="messageBox" style="display: none;" role="alert">
+                    </div>
+            </section>
+
+        </div>
+    </main>
+    
+    <div id="actionModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle" class="modal-title"></h3>
+            <p id="modalMessage" class="modal-message"></p>
+            <div id="modalContent">
+                </div>
+            <div class="modal-actions">
+                <button id="modalCancelButton" onclick="closeModal()" class="btn btn-cancel">Cancelar</button>
+                <button id="modalConfirmButton" class="btn btn-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulação de Variáveis globais de ambiente (mantidas para contexto)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // 1. DADOS DE USUÁRIOS
+        let usersData = [
+            { id: 4, nome: 'Ana Costa', email: 'ana.costa@sad.pe.gov.br', tipo: 'Cadastro', ultimoAcesso: '10/07/2025', totalAcessos: 5, ativo: true },
+            { id: 3, nome: 'Pedro Silva', email: 'pedro.silva@sad.pe.gov.br', tipo: 'Gestão', ultimoAcesso: '17/07/2025', totalAcessos: 10, ativo: true },
+            { id: 2, nome: 'João Ferreira', email: 'joao.ferreira@sad.pe.gov.br', tipo: 'Cadastro', ultimoAcesso: '15/07/2025', totalAcessos: 2, ativo: true },
+            { id: 1, nome: 'Maria Souza', email: 'maria.souza@sad.pe.gov.br', tipo: 'Administrador', ultimoAcesso: '18/07/2025', totalAcessos: 10, ativo: false }, 
+        ];
+
+        // Variáveis DOM
+        let usersTableBody, messageBox, createUserButton, actionModal, modalTitle, modalMessage, modalContent, modalConfirmButton, modalCancelButton;
+
+        // --- 2. FUNÇÕES DE UTILIDADE (MODAL E MENSAGENS) ---
+
+        /**
+         * Exibe uma mensagem de feedback na tela.
+         */
+        function showMessage(message, type = 'success') {
+            if (!messageBox) return; 
+            
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+
+            messageBox.classList.remove('msg-success', 'msg-error');
+            messageBox.classList.add(type === 'error' ? 'msg-error' : 'msg-success');
+            
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 5000);
+        }
+
+        /**
+         * Abre o modal de ação
+         */
+        function openModal(title, message, confirmAction, content = null) {
+            if (!actionModal) return; 
+            
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            
+            modalConfirmButton.onclick = confirmAction;
+            
+            modalContent.innerHTML = '';
+            
+            if (content) {
+                modalContent.appendChild(content);
+                modalMessage.style.display = 'none'; 
+            } else {
+                modalMessage.style.display = 'block';
+            }
+            
+            document.addEventListener('keydown', handleEscKey);
+            actionModal.style.display = 'flex';
+        }
+
+        /**
+         * Fecha o modal de ação
+         */
+        function closeModal() {
+            if (!actionModal) return; 
+            actionModal.style.display = 'none';
+            document.removeEventListener('keydown', handleEscKey);
+        }
+
+        /**
+         * Lida com o fechar do modal pressionando a tecla ESC
+         */
+        function handleEscKey(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        }
+
+        // --- 3. FUNÇÕES DE RENDERIZAÇÃO DA TABELA ---
+
+        /**
+         * Adiciona uma nova linha de usuário na tabela.
+         */
+        function renderUserRow(user) {
+            const row = document.createElement('tr');
+            row.id = `user-row-${user.id}`;
+            
+            const inactivateButtonText = user.ativo ? 'Inativar' : 'Ativar';
+            const inactivateButtonClass = user.ativo ? 'btn-inativar' : 'btn-ativar';
+            const statusText = user.ativo ? user.tipo : 'INATIVO';
+
+            if (!user.ativo) {
+                row.classList.add('inativo-row');
+            }
+
+            row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.nome}</td>
+                <td>${user.email}</td>
+                <td>${statusText}</td>
+                <td>${user.ultimoAcesso}</td>
+                <td style="text-align: center;">${user.totalAcessos}</td>
+                <td class="actions-cell">
+                    <button class="btn-action ${inactivateButtonClass}" data-action="${user.ativo ? 'inativar' : 'ativar'}" data-user-id="${user.id}">
+                        <i class="${user.ativo ? 'fas fa-ban' : 'fas fa-check-circle'}"></i> ${inactivateButtonText}
+                    </button>
+                    <button class="btn-action btn-editar" data-action="editar" data-user-id="${user.id}">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn-action btn-email" data-action="reenviar-email" data-user-id="${user.id}">
+                        <i class="fas fa-envelope"></i> Reenviar E-mail
+                    </button>
+                </td>
+            `;
+            usersTableBody.appendChild(row);
+        }
+
+        /**
+         * Renderiza toda a tabela de usuários.
+         */
+        function renderTable() {
+            if (!usersTableBody) return;
+            
+            usersTableBody.innerHTML = ''; 
+            usersData.sort((a, b) => b.id - a.id).forEach(renderUserRow);
+        }
+
+        // --- 4. FUNÇÕES DE GERENCIAMENTO (CRIAR, EDITAR, INATIVAR) ---
+
+        /**
+         * Cria um novo usuário.
+         */
+        function handleCreateUser() {
+            // IDs buscados: newUserNameInput, newUserEmailInput, newUserRoleSelect
+            const name = document.getElementById('newUserNameInput').value.trim();
+            const email = document.getElementById('newUserEmailInput').value.trim();
+            const role = document.getElementById('newUserRoleSelect').value;
+
+            if (!name || !email || !role) {
+                showMessage('Por favor, preencha todos os campos e selecione uma função.', 'error');
+                return;
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                showMessage('O e-mail parece inválido.', 'error');
+                return;
+            }
+
+            const newId = usersData.length > 0 ? Math.max(...usersData.map(u => u.id)) + 1 : 1; 
+            const newUser = {
+                id: newId,
+                nome: name,
+                email: email,
+                tipo: role,
+                ultimoAcesso: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                totalAcessos: 0,
+                ativo: true
+            };
+
+            usersData.push(newUser);
+            renderTable();
+            showMessage(`Usuário "${name}" criado com sucesso! Um e-mail de ativação foi simuladamente enviado.`);
+            
+            // Limpa o formulário
+            document.getElementById('newUserNameInput').value = '';
+            document.getElementById('newUserEmailInput').value = '';
+            document.getElementById('newUserRoleSelect').value = '';
+        }
+
+        /**
+         * Inativa ou Ativa um usuário.
+         */
+        function handleInativar(id) {
+            const user = usersData.find(u => u.id === id);
+            if (!user) return;
+
+            const action = user.ativo ? 'Inativar' : 'Ativar';
+            const message = user.ativo ? 
+                `Você confirma a ação de ${action.toLowerCase()} o usuário ${user.nome}? Ele perderá o acesso ao sistema até ser reativado.` :
+                `Você confirma a ação de ${action.toLowerCase()} o usuário ${user.nome}? Ele voltará a ter acesso ao sistema.`;
+
+            openModal(
+                `${action} Usuário`,
+                message,
+                () => {
+                    user.ativo = !user.ativo; // Inverte o status
+                    renderTable();
+                    showMessage(`Usuário ${user.nome} foi ${user.ativo ? 'ativado' : 'inativado'} com sucesso.`);
+                    closeModal();
+                }
+            );
+        }
+
+        /**
+         * Simula a edição de um usuário, incluindo a opção de mudar a senha.
+         */
+        function handleEditar(id) {
+            const user = usersData.find(u => u.id === id);
+            if (!user) return;
+
+            // --- NOVO FORMULÁRIO COM CAMPO DE SENHA ---
+            const editForm = document.createElement('div');
+            editForm.innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <label for="editName" style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">Nome</label>
+                    <input type="text" id="editName" value="${user.nome}" style="display: block; width: 100%; padding: 0.625rem 0.75rem; border: 1px solid var(--color-border); border-radius: 0.5rem; box-sizing: border-box;">
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label for="editPassword" style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">Senha</label>
+                    <input type="password" id="editPassword" placeholder="Deixe em branco para não alterar a senha" style="display: block; width: 100%; padding: 0.625rem 0.75rem; border: 1px solid var(--color-border); border-radius: 0.5rem; box-sizing: border-box;">
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label for="editRole" style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;">Função</label>
+                    <select id="editRole" style="display: block; width: 100%; padding: 0.625rem 0.75rem; border: 1px solid var(--color-border); border-radius: 0.5rem; box-sizing: border-box; appearance: none; background-color: var(--color-white);">
+                        <option value="Cadastro" ${user.tipo === 'Cadastro' ? 'selected' : ''}>Cadastro</option>
+                        <option value="Gestão" ${user.tipo === 'Gestão' ? 'selected' : ''}>Gestão</option>
+                        <option value="Administrador" ${user.tipo === 'Administrador' ? 'selected' : ''}>Administrador</option>
+                    </select>
+                </div>
+            `;
+            // --- FIM DO NOVO FORMULÁRIO ---
+            
+            openModal(
+                'Editar Usuário',
+                '', 
+                () => {
+                    const newName = document.getElementById('editName').value.trim();
+                    const newPassword = document.getElementById('editPassword').value; // Pega o novo valor da senha
+                    const newRole = document.getElementById('editRole').value;
+
+                    if (!newName) {
+                        showMessage('O nome não pode estar vazio.', 'error');
+                        closeModal();
+                        return;
+                    }
+                    
+                    user.nome = newName;
+                    user.tipo = newRole;
+                    
+                    let successMessage = `Usuário ${user.id} editado com sucesso. As alterações (Nome e Função) foram salvas localmente.`;
+
+                    if (newPassword) {
+                        // Simulação de atualização de senha
+                        successMessage += ` A **senha** foi redefinida com o novo valor.`;
+                    }
+
+                    renderTable();
+                    showMessage(successMessage);
+                    closeModal();
+                },
+                editForm
+            );
+        }
+
+        /**
+         * Simula o reenvio de e-mail de ativação.
+         */
+        function handleReenviarEmail(id) {
+            const user = usersData.find(u => u.id === id);
+            if (!user) return;
+
+            openModal(
+                'Reenviar E-mail',
+                `Deseja reenviar o e-mail de ativação/cadastro para o usuário ${user.nome} (${user.email})?`,
+                () => {
+                    showMessage(`E-mail de ativação reenviado (simulação) para ${user.email}.`);
+                    closeModal();
+                }
+            );
+        }
+
+        // --- 5. INICIALIZAÇÃO E EVENT LISTENERS ---
+
+        window.onload = function() {
+            // 5a. Obtenção das referências DOM
+            usersTableBody = document.getElementById('usersTableBody');
+            messageBox = document.getElementById('messageBox');
+            createUserButton = document.getElementById('createUserButton');
+            actionModal = document.getElementById('actionModal');
+            modalTitle = document.getElementById('modalTitle');
+            modalMessage = document.getElementById('modalMessage');
+            modalContent = document.getElementById('modalContent');
+            modalConfirmButton = document.getElementById('modalConfirmButton');
+            modalCancelButton = document.getElementById('modalCancelButton'); // ID adicionado
+            
+            // 5b. Adiciona Listeners
+            createUserButton.addEventListener('click', handleCreateUser);
+            modalCancelButton.addEventListener('click', closeModal);
+
+            // 5c. Event Delegation para os botões da tabela
+            usersTableBody.addEventListener('click', (event) => {
+                const target = event.target.closest('.btn-action');
+                if (!target) return;
+
+                const userId = parseInt(target.dataset.userId);
+                const action = target.dataset.action;
+
+                if (isNaN(userId)) return;
+
+                switch (action) {
+                    case 'inativar':
+                    case 'ativar':
+                        handleInativar(userId);
+                        break;
+                    case 'editar':
+                        handleEditar(userId);
+                        break;
+                    case 'reenviar-email':
+                        handleReenviarEmail(userId);
+                        break;
+                }
+            });
+
+            // 5d. Renderiza a tabela inicial
+            renderTable();
+        };
+    </script>
+    </body>
+</html>
