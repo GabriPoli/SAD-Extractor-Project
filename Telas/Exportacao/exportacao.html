@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAD-Extractor | Edição de Dados</title>
-    <link rel="stylesheet" href="edicao.css">
+    <title>SAD-Extractor | Exportação</title>
+    <link rel="stylesheet" href="exportacao.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -54,12 +54,12 @@
                 <span class="step-label">Upload</span>
             </div>
             <div class="step-line completed"></div>
-            <div class="step active">
+            <div class="step completed">
                 <div class="step-circle">2</div>
                 <span class="step-label">Edição</span>
             </div>
-            <div class="step-line"></div>
-            <div class="step">
+            <div class="step-line completed"></div>
+            <div class="step active">
                 <div class="step-circle">3</div>
                 <span class="step-label">Exportação</span>
             </div>
@@ -68,8 +68,8 @@
         <div class="main-card">
             
             <div class="page-header">
-                <h2>Edição dos dados extraídos</h2>
-                <p>Revise o resumo dos dados extraídos a partir dos laudos</p>
+                <h2>Exportação dos Laudos validados</h2>
+                <p>Exporte os dados que foram validados no formato que desejar</p>
             </div>
 
             <div class="table-card-inner">
@@ -87,46 +87,44 @@
                                 <th>% <span class="sort-icon">⇅</span></th>
                                 <th>Confiabilidade <span class="sort-icon">⇅</span></th>
                                 <th>Ação recomendada</th>
-                                <th width="40"></th> 
                             </tr>
                         </thead>
                         <tbody id="table-body">
-                            <!-- Dados serão inseridos via JavaScript -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
 
                 <div class="table-footer">
                     <div class="footer-left">
                         <span class="action-link" id="select-all-text">Selecionar tudo</span>
-                        <span class="action-link danger" id="deselect-all-text">Excluir tudo</span>
                     </div>
                     <div id="pagination-wrapper" class="footer-right"></div>
                 </div>
             </div>
 
-            <div class="card-bottom-actions">
-                <div class="selected-badge-container">
-                    <div id="selected-count-badge" class="selected-badge hidden">0 laudos selecionados</div>
+            <div class="export-bottom-area">
+                <div id="selected-count-badge" class="selected-badge hidden">0 laudos selecionados</div>
+
+                <div class="export-controls-wrapper">
+                    <span class="export-label">Opções para exportação dos laudos:</span>
+                    
+                    <select id="export-format" class="form-select">
+                        <option value="" disabled selected>Selecionar formato</option>
+                        <option value="xlsx">.XLSX (Excel)</option>
+                        <option value="csv">.CSV (Separado por vírgula)</option>
+                        <option value="pdf">.PDF (Relatório)</option>
+                        <option value="json">.JSON (Integração)</option>
+                    </select>
+
+                    <button id="btn-download" class="btn-primary-large" disabled>Baixar laudos</button>
                 </div>
-                <button id="btn-validate" class="btn-primary-large" disabled>Validar Dados</button>
             </div>
 
         </div> 
     </div>
 
-    <!-- Modal de Confirmação -->
-    <div id="confirmation-modal" class="modal-overlay hidden">
-        <div class="modal-content modal-delete">
-            <h3>Confirmar Ação</h3>
-            <p id="modal-message">Tem certeza que deseja excluir este item?</p>
-            <div class="modal-actions">
-                <button id="btn-cancel-delete" class="btn-secondary">Cancelar</button>
-                <button id="btn-confirm-delete" class="btn-danger">Excluir</button>
-            </div>
-        </div>
-    </div>
+    <div id="toast-container"></div>
 
-    <script src="edicao.js"></script>
+    <script src="exportacao.js"></script>
 </body>
 </html>

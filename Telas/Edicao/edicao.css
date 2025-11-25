@@ -1,879 +1,538 @@
+:root {
+    --color-primary: #0047bb; 
+    --color-primary-hover: #003399;
+    --color-bg-page: #f0f2f5;
+    --color-bg-card: #ffffff;
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-border: #e5e7eb;
+    --color-danger: #dc2626;
+    --color-danger-bg: #fee2e2;
+    --color-success: #22c55e;
+    --color-warning: #eab308;
+    --font-family: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* Fundo muito claro, replicando o figma [1, 2] */
+    font-family: var(--font-family);
+    background-color: var(--color-bg-page);
     margin: 0;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    color: var(--color-text);
+    padding-bottom: 60px;
 }
 
-/* ----------------------------------
-   1. NavBar e Menu (Predominantemente Azul)
-   ---------------------------------- */
-
-.navbar {
-    background-color: #007bff; /* Azul primário forte */
-    color: white;
-    padding: 10px 40px;
-    display: flex;
-    justify-content: space-between;
+/* --- HEADER --- */
+.container-full { 
+    width: 100%; 
+    padding: 0 40px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.main-header { 
+    background: linear-gradient(90deg, #0052cc 0%, #003399 100%); 
+    color: white; 
+    width: 100%; 
+}
+.header-top { 
+    height: 80px; 
+    border-bottom: 1px solid rgba(255,255,255,0.15); 
+}
+.header-brand, .header-logos { 
+    display: flex; 
+    align-items: center; 
+}
+.logo-box { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
+.brand-text h1 { 
+    margin: 0; 
+    font-size: 1.5rem; 
+    font-weight: 700; 
+    line-height: 1.1; 
+}
+.brand-text span { 
+    font-size: 0.85rem; 
+    opacity: 0.9; 
+    font-weight: 300; 
+    display: block; 
+}
+.gov-logo { 
+    height: 50px; 
+    width: auto; 
+    object-fit: contain; 
+}
+.header-nav { 
+    height: 50px; 
+}
+.nav-links { 
+    display: flex; 
+    height: 100%; 
+    gap: 5px; 
+}
+.nav-links a { 
+    color: rgba(255,255,255,0.8); 
+    text-decoration: none; 
+    font-size: 0.9rem; 
+    padding: 0 15px; 
+    height: 100%; 
+    display: flex; 
+    align-items: center; 
+    border-bottom: 3px solid transparent; 
+}
+.nav-links a.active { 
+    color: white; 
+    font-weight: 600; 
+    border-bottom-color: white; 
+    background: rgba(255,255,255,0.1); 
+}
+.divider { 
+    color: rgba(255,255,255,0.3); 
+    font-size: 0.8rem; 
+    margin: 0 5px; 
+    display: flex; 
     align-items: center;
 }
-
-.navbar-left {
-    display: flex;
-    flex-direction: column;
+.user-info { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    cursor: pointer; 
+    font-size: 0.9rem; 
+}
+.avatar { 
+    width: 32px; 
+    height: 32px; 
+    background: white; 
+    color: var(--color-primary); 
+    border-radius: 50%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-weight: bold; 
 }
 
-.logo-text {
-    font-size: 1.5em;
-    font-weight: bold;
+/* --- STEPPER --- */
+.stepper-container {
+    max-width: 600px; 
+    margin: 30px auto; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    position: relative;
 }
-
-.subtitle-text {
-    font-size: 0.8em;
-    opacity: 0.8;
+.step { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    z-index: 2; 
 }
-
-/* Menu de Navegação Horizontal */
-.main-menu {
-    display: flex;
-    align-items: center;
-    padding: 10px 40px;
-    background-color: white;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.menu-item {
-    text-decoration: none;
-    color: #555;
-    padding: 8px 15px;
-    margin-right: 15px;
-    transition: color 0.3s, border-bottom 0.3s;
-}
-
-/* Destaque Azul para o item ativo, como no Figma [1, 2] */
-.menu-item.active {
-    color: #007bff; 
-    border-bottom: 3px solid #007bff;
-    font-weight: 600;
-}
-
-.user-info {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-}
-
-.avatar {
-    margin-left: 10px;
-    width: 30px;
-    height: 30px;
-    background-color: #007bff; /* Azul para o avatar */
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-}
-
-/* ----------------------------------
-   2. Stepper (Indicador de Progresso)
-   ---------------------------------- */
-
-.content-wrapper {
-    padding: 30px 40px;
-    flex-grow: 1; /* Ocupa o espaço restante */
-}
-
-.stepper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 40px;
-}
-
-.step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 100px;
-}
-
 .step-circle {
-    width: 30px;
-    height: 30px;
+    width: 32px; 
+    height: 32px; 
     border-radius: 50%;
-    display: flex;
+    background-color: #e5e7eb; 
+    color: #6b7280;
+    display: flex; 
+    align-items: center; 
     justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    color: white;
-    background-color: #ced4da; /* Cinza inativo */
-    transition: background-color 0.3s;
+    font-weight: 600; 
+    font-size: 0.9rem; 
+    margin-bottom: 6px;
+    border: 2px solid white; 
+}
+.step-label { 
+    font-size: 0.8rem; 
+    font-weight: 500; 
+    color: #6b7280; 
 }
 
-/* O gradiente verde/azul no passo ativo simula o destaque moderno, conforme o exemplo [1, 2] */
-.step.active .step-circle {
-    background: linear-gradient(45deg, #28a745, #1e90ff); /* Verde (Figma [1, 2]) misturado com Azul (Nova Paleta) */
+.step.active .step-circle { 
+    background-color: #22c55e; 
+    color: white; 
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #22c55e; 
+}
+.step.active .step-label { 
+    color: #1f2937; 
+    font-weight: 700; 
+}
+.step.completed .step-circle { 
+    background-color: #22c55e; 
+    color: white; 
+}
+.step.completed .step-label { 
+    color: #1f2937; 
 }
 
-.step-label {
-    margin-top: 5px;
-    font-size: 0.9em;
-    color: #6c757d;
+.step-line { 
+    flex-grow: 1; 
+    height: 4px; 
+    background-color: #e5e7eb; 
+    margin: 0 10px; 
+    margin-top: -20px;
+    border-radius: 2px; 
+    z-index: 1; 
+}
+.step-line.completed { 
+    background-color: #22c55e; 
 }
 
-.progress-line {
-    height: 4px;
-    width: 100px;
-    background-color: #ced4da;
-    margin: 0 10px;
-    transition: background-color 0.3s;
+/* --- CARD E TABELA --- */
+.app-container { 
+    max-width: 1200px; 
+    margin: 30px auto; 
+    padding: 0 20px; 
+}
+.main-card { 
+    background: white; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+    padding: 30px 40px; 
+    border: 1px solid var(--color-border); 
+}
+.page-header { 
+    text-align: left; 
+    margin-bottom: 30px; 
+}
+.page-header h2 { 
+    font-size: 1.5rem; 
+    margin: 0 0 5px 0; 
+}
+.page-header p { 
+    color: var(--color-text-muted); 
+    margin: 0; 
 }
 
-.progress-line.active {
-    background-color: #28a745; /* Linha de progresso ativa */
+.table-card-inner { 
+    border: 1px solid var(--color-border); 
+    border-radius: 8px; 
+    overflow: hidden; 
+    margin-bottom: 30px;
+}
+.table-header-title { 
+    padding: 15px 20px; 
+    border-bottom: 1px solid var(--color-border); 
+    background: #fff; 
+    font-weight: 700; 
+    font-size: 0.95rem; 
+}
+.table-responsive { 
+    overflow-x: auto; 
+}
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+thead th { 
+    text-align: left; 
+    padding: 12px 15px; 
+    border-bottom: 1px solid var(--color-border); 
+    font-size: 0.75rem; 
+    text-transform: uppercase; 
+    color: #6b7280; 
+    font-weight: 700; 
+    white-space: nowrap;
+}
+tbody td { 
+    padding: 14px 15px; 
+    border-bottom: 1px solid #f3f4f6; 
+    font-size: 0.9rem; 
+    vertical-align: middle; 
+    color: #374151; 
 }
 
-.modal-overlay {
-    position: fixed; /* Cobre a tela inteira */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+/* Estilos Especiais da Linha */
+tr.row-discarded { 
+    background-color: #fee2e2; 
+}
+tr.row-discarded td { 
+    color: #991b1b; 
+}
+tr.row-discarded .laudo-link { 
+    color: #991b1b; 
 }
 
-.modal-content {
-    background-color: #fff;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    overflow: hidden; /* Garante que o header não vaze */
+.doc-link-wrapper { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
 }
-
-.modal-header {
-    background-color: #0056b3; /* Azul primário */
-    color: white;
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h2 {
-    margin: 0;
-    font-size: 1.25rem;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.75rem;
-    font-weight: bold;
+.laudo-link { 
+    color: var(--color-primary); 
+    text-decoration: none; 
+    font-weight: 500; 
     cursor: pointer;
-    line-height: 1;
+}
+.eye-icon { 
+    width: 16px; 
+    opacity: 0.7; 
+}
+.action-cell { 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+    font-weight: 500; 
+}
+.status-icon { 
+    width: 14px; 
+    height: 14px; 
+    display: inline-block; 
+    border-radius: 50%; 
 }
 
-.modal-body {
-    padding: 24px;
-    font-size: 1rem;
-    text-align: center;
+/* Barras de Confiabilidade */
+.reliability-wrapper { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
 }
-
-.modal-body p {
-    margin: 0 0 10px 0;
-    color: #333;
-}
-
-.modal-body .warning {
-    color: #d9534f; /* Vermelho alerta */
-    font-size: 0.9rem;
-}
-
-.modal-footer {
-    padding: 16px 24px;
-    display: flex;
-    justify-content: center;
-    border-top: 1px solid #eee;
-}
-
-.hidden {
-    display: none;
-}
-
-
-:root {
-    /* Cores primárias do novo design */
-    --color-primary: #0d6efd; /* Azul principal (botões) */
-    --color-primary-rgb: 13, 110, 253;
-    --color-danger: #dc3545;  /* Vermelho (erros, lixeira) */
-    --color-danger-rgb: 220, 53, 69;
-    --color-warning: #ffc107; /* Amarelo (revisar) */
-    --color-warning-rgb: 255, 193, 7;
-    --color-success: #198754; /* Verde (prosseguir) */
-    --color-success-rgb: 25, 135, 84;
-
-    /* Cores de Texto e Fundo */
-    --color-text: #212529;
-    --color-text-muted: #6c757d;
-    --color-border: #dee2e6;
-    --color-bg: #f4f7fa;     /* Fundo da página */
-    --color-bg-card: #ffffff;
-    --color-bg-light-gray: #f8f9fa;
-}
-
-
-/* --- 1. ESTILOS GLOBAIS E VARIÁVEIS --- */
-:root {
-    /* Cores primárias do novo design */
-    --color-primary: #0d6efd; /* Azul principal (botões) */
-    --color-primary-rgb: 13, 110, 253;
-    --color-danger: #dc3545;  /* Vermelho (erros, lixeira) */
-    --color-danger-rgb: 220, 53, 69;
-    --color-warning: #ffc107; /* Amarelo (revisar) */
-    --color-warning-rgb: 255, 193, 7;
-    --color-success: #198754; /* Verde (prosseguir) */
-    --color-success-rgb: 25, 135, 84;
-
-    /* Cores de Texto e Fundo */
-    --color-text: #212529;
-    --color-text-muted: #6c757d;
-    --color-border: #dee2e6;
-    --color-bg: #f4f7fa;     /* Fundo da página */
-    --color-bg-card: #ffffff;
-    --color-bg-light-gray: #f8f9fa;
-}
-
-/* --- 2. LAYOUT PRINCIPAL --- */
-.edit-section {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Card do Cabeçalho da Página */
-.page-header-card {
-    background-color: var(--color-bg-card);
-    border-radius: 12px;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    padding: 24px;
-    margin-bottom: 24px; /* Espaço entre os dois cards */
-}
-.page-header-card h2 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 8px;
-}
-.page-header-card .subtitle {
-    font-size: 1rem;
-    color: var(--color-text-muted);
-    margin-bottom: 0;
-}
-
-
-/* --- 3. BOTÕES GLOBAIS --- */
-.btn-primary {
-    background-color: var(--color-primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-.btn-primary:hover {
-    background-color: #0b5ed7;
-}
-.btn-primary:disabled {
-    background-color: #a0c3f0;
-    cursor: not-allowed;
-}
-
-.btn-link {
-    background: none;
-    border: none;
-    color: var(--color-primary);
-    cursor: pointer;
-    padding: 0;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-.btn-link:hover {
-    text-decoration: underline;
-}
-
-/* --- 4. O CARD PRINCIPAL (Tabela) --- */
-.card {
-    background-color: var(--color-bg-card);
-    border-radius: 12px;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+.reliability-track { 
+    width: 80px; 
+    height: 8px; 
+    background-color: #e5e7eb; 
+    border-radius: 4px; 
     overflow: hidden; 
 }
-
-.card-header {
-    padding: 16px 24px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-bottom: 1px solid var(--color-border);
+.reliability-bar { 
+    height: 100%; 
+    border-radius: 4px; 
 }
 
-.table-container {
-    width: 100%;
-    overflow-x: auto; /* Permite scroll horizontal em telas pequenas */
+/* Cores de Status e Barra */
+.status-green .reliability-bar { 
+    background-color: #22c55e; 
+}
+.status-yellow .reliability-bar { 
+    background-color: #eab308; 
+}
+.status-red .reliability-bar { 
+    background-color: #ef4444; 
 }
 
-/* --- 5. TABELA --- */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
+.action-text.green { 
+    color: #15803d; 
+}
+.action-text.yellow { 
+    color: #a16207; 
+}
+.action-text.red { 
+    color: #b91c1c; 
 }
 
-thead th {
-    padding: 16px 12px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    vertical-align: middle;
-    position: relative;
-    cursor: pointer;
+/* Checkbox e Ícones */
+.custom-checkbox { 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
-/* Setas de Ordenação (placeholder) */
-thead th:nth-child(3)::after, /* Nome do arquivo */
-thead th:nth-child(4)::after, /* Dados extraídos */
-thead th:nth-child(6)::after  /* Confiabilidade */
-{
-    content: '↑↓';
-    opacity: 0.3;
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.9rem;
+.custom-checkbox input { 
+    accent-color: var(--color-primary); 
+    cursor: pointer; 
+    width: 16px; 
+    height: 16px; 
+    margin: 0;
 }
-
-tbody tr {
-    border-bottom: 1px solid var(--color-border);
-    transition: background-color 0.15s ease;
+.discard-icon { 
+    color: #ef4444; 
+    width: 20px; 
+    display: flex; 
+    justify-content: center; 
 }
-tbody tr:last-child {
-    border-bottom: none;
-}
-tbody tr:hover {
-    background-color: #fcfcfc;
-}
-
-/* Linha de Erro */
-tbody tr.row-error {
-    background-color: rgba(var(--color-danger-rgb), 0.05);
-}
-tbody tr.row-error:hover {
-    background-color: rgba(var(--color-danger-rgb), 0.1);
-}
-
-tbody td {
-    padding: 12px;
-    vertical-align: middle;
-    font-size: 0.95rem;
-}
-
-/* --- 6. COMPONENTES DA TABELA --- */
-
-/* Checkbox Customizado */
-.custom-checkbox {
-    position: relative;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-.custom-checkbox .row-checkbox {
-    opacity: 0; 
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    cursor: pointer;
-}
-.custom-checkbox .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 20px;
-    background-color: var(--color-bg-light-gray);
-    border: 1px solid var(--color-border);
+.btn-trash { 
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    color: #ef4444; 
+    padding: 4px; 
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-size: 1rem;
-    line-height: 1;
-    font-weight: bold;
 }
-.custom-checkbox .row-checkbox:checked + .checkmark {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-}
-.custom-checkbox.checkbox-error .checkmark {
-    background-color: rgba(var(--color-danger-rgb), 0.1);
-    border-color: var(--color-danger);
-    color: var(--color-danger);
-}
-.custom-checkbox.checkbox-error .row-checkbox:checked + .checkmark {
-    background-color: var(--color-danger);
-    border-color: var(--color-danger);
-    color: white;
-}
-/* Estilo para Checkbox Desabilitado */
-.custom-checkbox.disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
+.btn-trash:hover { 
+    background-color: rgba(239, 68, 68, 0.1); 
 }
 
-/* Link do Laudo */
-.laudo-name-link {
+/* Footer e Paginação */
+.table-footer { 
+    padding: 15px 20px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: #fff; 
+    border-top: 1px solid var(--color-border); 
+}
+.action-link { 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+    cursor: pointer; 
+    margin-right: 15px; 
     color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
 }
-.laudo-name-link:hover {
-    text-decoration: underline;
+.action-link.danger { 
+    color: var(--color-danger); 
+    margin-right: 0; 
 }
-.laudo-link-icon {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--color-primary);
+.pagination-controls { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-size: 0.8rem; 
+    color: #6b7280; 
+}
+.page-nav-btn { 
+    background: none; 
+    border: none; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    color: #6b7280; 
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+.page-nav-btn:hover:not(:disabled) {
+    background-color: #f3f4f6;
+}
+.page-nav-btn:disabled {
     opacity: 0.5;
-}
-
-/* Barra de Confiabilidade */
-.confidence-bar {
-    width: 100%;
-    min-width: 100px;
-}
-.confidence-track {
-    width: 100%;
-    height: 12px;
-    background-color: #e9ecef;
-    border-radius: 6px;
-    overflow: hidden;
-}
-.confidence-value {
-    height: 100%;
-    border-radius: 6px;
-}
-.confidence-value.confidence-success { background-color: var(--color-success); }
-.confidence-value.confidence-warning { background-color: var(--color-warning); }
-.confidence-value.confidence-danger  { background-color: var(--color-danger); }
-
-/* Pílula de Status */
-.status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-.status-pill::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-.status-pill.status-success {
-    background-color: rgba(var(--color-success-rgb), 0.1);
-    color: var(--color-success);
-}
-.status-pill.status-success::before { background-color: var(--color-success); }
-.status-pill.status-warning {
-    background-color: rgba(var(--color-warning-rgb), 0.1);
-    color: #b38b00;
-}
-.status-pill.status-warning::before { background-color: var(--color-warning); }
-.status-pill.status-danger {
-    background-color: rgba(var(--color-danger-rgb), 0.1);
-    color: var(--color-danger);
-}
-.status-pill.status-danger::before { background-color: var(--color-danger); }
-
-/* Wrapper de Status (para Tooltip) */
-.status-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.info-icon {
-    color: var(--color-text-muted);
-    cursor: help;
-    width: 16px;
-    height: 16px;
-    transform: translateY(2px);
-}
-.info-tooltip {
-    position: relative;
-}
-.info-tooltip .tooltip-text {
-    visibility: hidden;
-    width: 240px;
-    background-color: #212529;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    font-weight: 400;
-    line-height: 1.4;
-    position: absolute;
-    z-index: 10;
-    bottom: 160%;
-    left: 50%;
-    margin-left: -120px;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-.info-tooltip .tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #212529 transparent transparent transparent;
-}
-.info-tooltip:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Botão Lixeira */
-.btn-delete {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--color-danger);
-    padding: 4px;
-}
-.btn-delete:hover {
-    opacity: 0.7;
-}
-
-/* --- 7. RODAPÉ DO CARD --- */
-.card-footer {
-    padding: 16px 24px;
-    background-color: var(--color-bg-card);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    border-top: 1px solid var(--color-border);
-}
-
-.footer-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.card-footer-bottom-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-
-.items-per-page {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-}
-.items-per-page select {
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: 1px solid var(--color-border);
-    font-size: 0.9rem;
-}
-
-/* Paginação */
-.pagination-controls {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-.pagination-info {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
-    margin-right: 12px;
-}
-.page-btn {
-    border: 1px solid var(--color-border);
-    background-color: #fff;
-    min-width: 36px;
-    height: 36px;
-    padding: 6px 10px;
-    cursor: pointer;
-    border-radius: 6px;
-    font-size: 0.9rem;
-}
-.page-btn:hover:not(:disabled) {
-    background-color: var(--color-bg-light-gray);
-}
-.page-btn.active {
-    background-color: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary);
-}
-.page-btn:disabled {
-    color: var(--color-border);
     cursor: not-allowed;
-    background-color: var(--color-bg-light-gray);
+}
+.page-numbers span { 
+    margin: 0 4px; 
+    cursor: pointer; 
+}
+.page-numbers span.active { 
+    font-weight: bold; 
+    color: black; 
+}
+.page-size-select { 
+    padding: 4px 8px; 
+    border-radius: 4px; 
+    border: 1px solid #e5e7eb; 
+    background: white;
 }
 
-/* --- 8. BARRA DE RODAPÉ (Fora do Card) --- */
-.footer-bar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 24px 0;
+/* Botão Validar */
+.card-bottom-actions { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 15px; 
+    margin-top: 20px; 
 }
-
-#selected-count-balloon {
-    background-color: rgba(var(--color-primary-rgb), 0.1);
-    color: var(--color-primary);
-    padding: 8px 16px;
-    border-radius: 16px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    opacity: 0; /* Começa escondido */
-    transition: opacity 0.2s ease;
+.btn-primary-large {
+    background-color: #0047bb; 
+    color: white; 
+    border: none;
+    padding: 12px 40px; 
+    font-size: 1rem; 
+    font-weight: 600;
+    border-radius: 8px; 
+    cursor: pointer; 
+    box-shadow: 0 4px 6px rgba(0, 71, 187, 0.2);
+    transition: background 0.2s;
+    min-width: 150px;
 }
-#selected-count-balloon.active {
-    opacity: 1;
+.btn-primary-large:hover:not(:disabled) { 
+    background-color: #003399; 
 }
-
-#validate-data-btn {
-    min-width: 200px;
+.btn-primary-large:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
 }
-
-/* --- 9. MODAIS E TOASTS --- */
-
-/* Overlay Global */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+.selected-badge { 
+    background-color: #eff6ff; 
+    color: var(--color-primary); 
+    padding: 8px 16px; 
+    border-radius: 20px; 
+    font-size: 0.85rem; 
+    font-weight: 600; 
 }
 .hidden { 
-    display: none; 
+    display: none !important; 
 }
 
-/* Modal de Confirmação */
-.modal-content {
-    background-color: #fff;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
+/* Modal */
+.modal-overlay { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.5); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000; 
 }
-.modal-header {
-    background-color: var(--color-primary);
-    color: white;
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.modal-content { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 8px; 
+    width: 90%; 
+    max-width: 400px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
 }
-.modal-header h2 { margin: 0; font-size: 1.25rem; }
-.modal-close {
-    background: none; border: none; color: white;
-    font-size: 1.75rem; font-weight: bold; cursor: pointer;
+.modal-actions { 
+    display: flex; 
+    gap: 10px; 
+    justify-content: flex-end; 
+    margin-top: 20px; 
 }
-.modal-body {
-    padding: 32px 24px;
-    text-align: center;
+.btn-secondary { 
+    background: white; 
+    border: 1px solid #d1d5db; 
+    padding: 8px 16px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    color: #374151;
 }
-.modal-body p { margin: 0 0 10px 0; color: #333; font-size: 1.1rem; }
-.modal-body .warning { color: var(--color-danger); font-size: 0.9rem; }
-.modal-footer {
-    padding: 16px 24px;
-    display: flex;
-    justify-content: center;
-    border-top: 1px solid var(--color-border);
-}
-
-/* Modal de Detalhes */
-.modal-content-details {
-    background-color: #fff;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 900px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-}
-.modal-header-details {
-    background-color: var(--color-bg-light-gray);
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--color-border);
-}
-.modal-header-details h2 { margin: 0; font-size: 1.25rem; color: #333; }
-.subtitle-details {
-    padding: 0 24px;
-    margin: 16px 0;
-    color: var(--color-text-muted);
-    font-size: 0.95rem;
+.btn-danger { 
+    background: #dc2626; 
+    color: white; 
+    border: none; 
+    padding: 8px 16px; 
+    border-radius: 6px; 
+    cursor: pointer; 
 }
 
-/* (CORRIGIDO) Adiciona scroll interno se o conteúdo for muito alto */
-.modal-body-details { 
-    padding: 0 24px 24px 24px; 
-    max-height: 70vh; /* 70% da altura da tela */
-    overflow-y: auto; /* Adiciona scroll SÓ no corpo do modal */
+/* Toast */
+#toast-container { 
+    position: fixed; 
+    top: 20px; 
+    right: 20px; 
+    z-index: 9999; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
 }
-
-.modal-body-details h3 {
-    font-size: 1rem; color: #333; font-weight: 600;
-    margin-top: 24px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 12px;
+.toast-message { 
+    background: #fff; 
+    border-left: 4px solid #22c55e; 
+    padding: 15px 20px; 
+    border-radius: 4px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-size: 0.9rem; 
+    color: #333; 
+    min-width: 300px; 
+    animation: slideIn 0.3s ease-out;
 }
-.detail-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 24px 20px;
-    margin-bottom: 24px;
+.toast-message svg { 
+    color: #22c55e; 
+    width: 20px; 
+    height: 20px; 
 }
-.detail-item label {
-    display: block; font-size: 0.85rem; color: var(--color-text-muted);
-    margin-bottom: 4px;
-    font-weight: 500;
-}
-.detail-item span { color: var(--color-text); }
-.detail-item span.not-found { color: var(--color-danger); font-style: italic; }
-
-.modal-footer-details {
-    background-color: var(--color-bg-light-gray);
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid var(--color-border);
-}
-
-/* Toast (Notificação) */
-#toast-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding-top: 16px;
-    pointer-events: none;
-}
-.toast-message {
-    background-color: #f0f9eb;
-    color: #3E8635;
-    border: 1px solid #d9f0c3;
-    border-radius: 8px;
-    padding: 16px 24px;
-    font-size: 0.95rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 90%;
-    max-width: 600px;
-    pointer-events: all;
-}
-.toast-message span { display: flex; align-items: center; gap: 8px; }
-.toast-message .toast-clear {
-    color: var(--color-primary);
-    text-decoration: underline;
-    cursor: pointer;
-    font-weight: 500;
-    margin-left: 24px;
-}
-
-/* --- 10. ESTILOS DE EDIÇÃO DO MODAL --- */
-
-/* Mensagem "✓ Dados editados" */
-.edit-success {
-    color: var(--color-success);
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: opacity 0.2s ease;
-}
-/* Mensagem Padrão "*Dados editados..." */
-.edit-status-default {
-    font-size: 0.85rem; 
-    color: #555; 
-    font-style: italic;
-}
-/* (CORRIGIDO) Agora .hidden usa display:none para não ocupar espaço */
-.edit-success.hidden,
-.edit-status-default.hidden {
-    display: none;
-}
-
-
-/* Estilo do asterisco de "editado" */
-.edited-asterisk {
-    color: var(--color-danger);
-    font-weight: bold;
-    margin-right: 4px;
-}
-
-/* Estilo visual para campos quando estão em modo de edição */
-.modal-body-details span[contenteditable="true"] {
-    background-color: #f8f9fa;
-    box-shadow: 0 0 0 2px var(--color-primary);
-    border-radius: 4px;
-    outline: none;
-    padding: 2px 4px;
-    cursor: text;
-}
-.modal-body-details span[contenteditable="true"].not-found {
-    color: var(--color-text);
-    font-style: normal;
+@keyframes slideIn { 
+    from { transform: translateX(100%); opacity: 0; } 
+    to { transform: translateX(0); opacity: 1; } 
 }

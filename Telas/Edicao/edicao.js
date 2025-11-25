@@ -1,57 +1,67 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // CORREÇÃO DE EMERGÊNCIA: Fechar qualquer modal aberto
+    const modal = document.getElementById('confirmation-modal');
+    if (modal && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        console.log('Modal fechado forçadamente na inicialização');
+    }
 
     // --- 1. ESTADO DA APLICAÇÃO ---
     let allLaudos = [];
     let selectedLaudos = new Set();
     let currentPage = 1;
     let itemsPerPage = 4;
+    let itemToDelete = null;
 
     // --- 2. SELETORES DO DOM ---
     const tableBody = document.getElementById('table-body');
-    const paginationContainer = document.getElementById('pagination-container');
+    const paginationWrapper = document.getElementById('pagination-wrapper');
+    const selectedBadge = document.getElementById('selected-count-badge');
     const selectAllBtn = document.getElementById('select-all-text');
     const deselectAllBtn = document.getElementById('deselect-all-text');
-    const selectedCountSpan = document.getElementById('selected-count-balloon');
-    const validateDataBtn = document.getElementById('validate-data-btn');
-    const footerBar = document.querySelector('.footer-bar');
-    const cardFooter = document.querySelector('.card-footer');
+    const btnValidate = document.getElementById('btn-validate');
 
     // --- 3. DADOS DE TESTE (MOCK) ---
     function createMockData() {
         allLaudos = [];
+        
         const getDetails = (i) => ({
-            loc_endereco: 'Rua XXXXXXXXXX', loc_numero: String(i).padStart(3, '0'),
-            loc_complemento: (i % 3 === 0) ? 'Apto ' + i : null, loc_bairro: 'XXXXX',
-            loc_cep: 'XXXXX', loc_pais: 'XXXXX', loc_estado: 'XXXXXX',
-            loc_cidade: (i % 2 === 0) ? 'XXXXXXXXXX' : null, loc_regiao: 'XXXXXX',
-            loc_confFrente: null, loc_confFundo: 'XXXXXXXXXXXXXX', loc_confDireita: null,
-            loc_confEsquerda: 'XXXXXXXXXXXXXX', loc_pontoRef: 'XXXXXXXXXX', loc_obs: 'XXXXXXXXXXXXXX',
-            loc_coordS: null, loc_coordW: 'XXXXXXXXXXXXXX', carac_areaTerreno: 'XXXXXXXXXXX',
-            carac_areaConstruida: (i % 2 === 0) ? 'XXXXXXXXXXX' : null, carac_unidadeMedida: 'XXXXXXXXXXXXXX',
-            carac_estadoConserv: 'XXXXXXXXXXXXXX', carac_limitAdmin: null, fin_critVal: 'XXXXXXXXXXX',
-            fin_dataVal: null, fin_numDoc: (i % 4 === 0) ? 'DOC-00' + i : null,
-            fin_valConstNova: 'XXXXXXXXXXXXXX', fin_valAreaConst: 'XXXXXXXXXXXXXX',
-            fin_valTerreno: 'XXXXXXXXXXXXXX', fin_valTotal: 'XXXXXXXXXXXXXX', fin_obs: 'XXXXXXXXXXXXXX'
+            endereco: `Rua Exemplo, ${i * 10}`,
+            bairro: 'Centro',
+            cidade: 'Recife',
+            area: `${100 + i}m²`,
+            valor: `R$ ${200000 + (i * 1000)},00`
         });
 
         const getTooltip = (acao) => {
-            if (acao === 'Prosseguir') return 'Muitos dados extraídos, prosseguir para fazer a exportação.';
-            if (acao === 'Revisar Campos') return 'Revise os campos faltantes do laudo e preencha manualmente.';
-            if (acao === 'Descartado') return 'Descartado por possuir poucos dados extraídos.';
+            if (acao === 'Prosseguir') return 'Dados suficientes. Pronto para exportação.';
+            if (acao === 'Revisar Campos') return 'Atenção: Revise os campos faltantes.';
+            if (acao === 'Descartado') return 'Erro: Poucos dados extraídos.';
             return '';
         };
 
         for (let i = 1; i <= 50; i++) {
             const totalDados = 30;
-            const dadosOK = Math.floor(Math.random() * (totalDados + 1));
-            const percentNum = Math.round((dadosOK / totalDados) * 100);
-            let acao = percentNum >= 90 ? 'Prosseguir' : (percentNum >= 40 ? 'Revisar Campos' : 'Descartado');
+            let dadosOK = Math.floor(Math.random() * (totalDados + 1)); 
+            let percentNum = Math.round((dadosOK / totalDados) * 100);
             
+            let acao = 'Prosseguir';
+            if (percentNum < 40) acao = 'Descartado';
+            else if (percentNum < 90) acao = 'Revisar Campos';
+
+            if (i === 1) { acao = 'Revisar Campos'; percentNum = 40; }
+            if (i === 2) { acao = 'Prosseguir'; percentNum = 100; }
+            if (i === 3) { acao = 'Prosseguir'; percentNum = 70; }
+            if (i === 4) { acao = 'Descartado'; percentNum = 10; }
+
             allLaudos.push({
-                id: i, nomeArquivo: `Laudo_${String(i).padStart(3, '0')}.pdf`,
-                nomeLaudo: `LA ${String(i).padStart(3, '0')} SAD/XXX`,
-                dadosExtraidos: `${dadosOK}/${totalDados}`, percentual: `${percentNum}%`,
-                confiabilidade: `${percentNum}%`, acaoRecomendada: acao,
+                id: i,
+                nomeArquivo: `Laudo_${String(i).padStart(3, '0')}.pdf`,
+                nomeLaudo: `LA ${String(i).padStart(3, '0')} SAD/PE`,
+                dadosExtraidos: `${Math.floor((percentNum/100)*30)}/30`,
+                percentual: `${percentNum}%`,
+                confiabilidadeVal: percentNum,
+                acaoRecomendada: acao,
                 tooltipText: getTooltip(acao),
                 detalhes: getDetails(i),
                 detalhes_edited: {} 
@@ -61,66 +71,79 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. FUNÇÕES DE RENDERIZAÇÃO ---
     function renderTable() {
+        if (!tableBody) {
+            console.error('tableBody não encontrado');
+            return;
+        }
+        
         tableBody.innerHTML = '';
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const pageItems = allLaudos.slice(startIndex, endIndex);
 
-        if (pageItems.length === 0 && allLaudos.length > 0) {
-            currentPage = Math.max(1, currentPage - 1);
-            render();
+        if (pageItems.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">Nenhum laudo encontrado.</td></tr>';
             return;
         }
 
         pageItems.forEach(laudo => {
             const isChecked = selectedLaudos.has(laudo.id);
+            const isDiscarded = laudo.acaoRecomendada === 'Descartado';
+            
+            let rowClass = '';
+            let barColorClass = '';
+            let textClass = '';
+            let iconHtml = '';
+            let actionIcon = '';
+
+            if (isDiscarded) {
+                rowClass = 'row-discarded';
+                barColorClass = 'status-red';
+                textClass = 'action-text red';
+                iconHtml = `<div class="discard-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg></div>`;
+                actionIcon = `<svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>`;
+            } else {
+                iconHtml = `<div class="custom-checkbox"><input type="checkbox" class="row-checkbox" data-id="${laudo.id}" ${isChecked ? 'checked' : ''}></div>`;
+                
+                if (laudo.acaoRecomendada === 'Prosseguir') {
+                    barColorClass = 'status-green';
+                    textClass = 'action-text green';
+                    actionIcon = `<svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/></svg>`;
+                } else {
+                    barColorClass = 'status-yellow';
+                    textClass = 'action-text yellow';
+                    actionIcon = `<svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/></svg>`;
+                }
+            }
+
             const tr = document.createElement('tr');
-            const isErrorRow = laudo.acaoRecomendada === 'Descartado';
-            if (isErrorRow) tr.classList.add('row-error');
-            const getStatusClass = (acao) => (acao === 'Prosseguir' ? 'status-success' : (acao === 'Revisar Campos' ? 'status-warning' : (acao === 'Descartado' ? 'status-danger' : '')));
-            const getConfidenceClass = (confStr) => {
-                const confNum = parseInt(confStr.replace('%', ''), 10);
-                return confNum >= 90 ? 'confidence-success' : (confNum >= 40 ? 'confidence-warning' : 'confidence-danger');
-            };
-            const confidenceClass = getConfidenceClass(laudo.confiabilidade);
-            const statusClass = getStatusClass(laudo.acaoRecomendada);
+            if(rowClass) tr.className = rowClass;
 
             tr.innerHTML = `
-                <td>
-                    <div class="custom-checkbox ${isErrorRow ? 'checkbox-error disabled' : ''}">
-                        <input type="checkbox" class="row-checkbox" data-id="${laudo.id}" ${isChecked ? 'checked' : ''} ${isErrorRow ? 'disabled' : ''}>
-                        <span class="checkmark">${isErrorRow ? '×' : '✓'}</span>
-                    </div>
-                </td>
+                <td>${iconHtml}</td>
                 <td>${laudo.id}</td>
                 <td>
-                    <a href="#" class="laudo-name-link" data-id="${laudo.id}">
-                        ${laudo.nomeArquivo}
-                        <span class="laudo-link-icon"></span>
-                    </a>
+                    <div class="doc-link-wrapper">
+                        <a href="#" class="laudo-link" data-id="${laudo.id}">${laudo.nomeArquivo}</a>
+                        <svg class="eye-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    </div>
                 </td>
                 <td>${laudo.dadosExtraidos}</td>
                 <td>${laudo.percentual}</td>
-                <td>
-                    <div class="confidence-bar">
-                        <div class="confidence-track">
-                            <div class="confidence-value ${confidenceClass}" style="width: ${laudo.confiabilidade};"></div>
+                <td class="${barColorClass}">
+                    <div class="reliability-wrapper" title="${laudo.tooltipText}">
+                        <div class="reliability-track">
+                            <div class="reliability-bar" style="width: ${laudo.confiabilidadeVal}%"></div>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <div class="status-wrapper">
-                        <div class="info-tooltip">
-                            <svg class="info-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.064.293.006.399.287.47l.45.083.082.38-2.29.287-.082-.38.45-.083c.294-.07.352-.176.288-.469l.738-3.468c.064-.293-.006-.399-.287-.47l-.45-.083-.082-.38zm.05-3.466.083-.38-2.29-.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.064.293-.006.399.287.47l.45.083.082.38-2.29-.287-.082-.38.45-.083c.294-.07.352-.176.288-.469l.738-3.468c.064-.293.006-.399-.287-.47l-.45-.083L8.06 3.1z"/></svg>
-                            <span class="tooltip-text">${laudo.tooltipText}</span>
-                        </div>
-                        <div class="status-pill ${statusClass}">
-                            <span>${laudo.acaoRecomendada}</span>
-                        </div>
+                    <div class="action-cell ${textClass}">
+                       ${actionIcon} <span>${laudo.acaoRecomendada}</span>
                     </div>
                 </td>
-                <td>
-                    <button class="btn-delete" data-id="${laudo.id}">
+                <td style="text-align: right;">
+                    <button class="btn-trash" data-id="${laudo.id}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>
                     </button>
                 </td>
@@ -128,316 +151,276 @@ document.addEventListener('DOMContentLoaded', () => {
             tableBody.appendChild(tr);
         });
     }
+
     function updateSelectedCount() {
+        if (!selectedBadge || !btnValidate) return;
+        
         const count = selectedLaudos.size;
-        if (count === 0) {
-            selectedCountSpan.textContent = 'Nenhum laudo selecionado';
-            selectedCountSpan.classList.remove('active');
+        if (count > 0) {
+            selectedBadge.textContent = count === 1 ? '1 laudo selecionado' : `${count} laudos selecionados`;
+            selectedBadge.classList.remove('hidden');
+            btnValidate.disabled = false;
         } else {
-            selectedCountSpan.textContent = count === 1 ? '1 laudo selecionado' : `${count} laudos selecionados`;
-            selectedCountSpan.classList.add('active');
+            selectedBadge.classList.add('hidden');
+            btnValidate.disabled = true;
         }
     }
+
     function renderPagination() {
+        if (!paginationWrapper) return;
         const totalPages = Math.ceil(allLaudos.length / itemsPerPage);
-        paginationContainer.innerHTML = '';
         const startItem = allLaudos.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
         const endItem = Math.min(startItem + itemsPerPage - 1, allLaudos.length);
-        paginationContainer.insertAdjacentHTML('afterbegin', `<span class="pagination-info">${startItem}-${endItem} de ${allLaudos.length}</span>`);
-        if (totalPages <= 1) return;
-        let buttonsHTML = '';
-        buttonsHTML += `<button class="page-btn" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>&laquo;</button>`;
-        let startPage, endPage;
-        if (totalPages <= 3) {
-            startPage = 1; endPage = totalPages;
-        } else {
-            if (currentPage === 1) {
-                startPage = 1; endPage = 3;
-            } else if (currentPage >= totalPages - 1) {
-                startPage = totalPages - 2; endPage = totalPages;
-            } else {
-                startPage = currentPage - 1; endPage = currentPage + 1;
+
+        let html = `
+            <div class="pagination-controls">
+                <span>Itens por página</span>
+                <select class="page-size-select" id="items-per-page">
+                    <option value="4" ${itemsPerPage===4?'selected':''}>4</option>
+                    <option value="8" ${itemsPerPage===8?'selected':''}>8</option>
+                    <option value="16" ${itemsPerPage===16?'selected':''}>16</option>
+                </select>
+                <span style="margin-left: 10px;">${startItem}-${endItem} de ${allLaudos.length}</span>
+                <button class="page-nav-btn" data-action="prev" ${currentPage===1?'disabled':''}>‹</button>
+                <div class="page-numbers">
+                    <span class="active">${currentPage}</span>
+                </div>
+                <button class="page-nav-btn" data-action="next" ${currentPage===totalPages?'disabled':''}>›</button>
+            </div>
+        `;
+        paginationWrapper.innerHTML = html;
+
+        paginationWrapper.addEventListener('change', (e) => {
+            if (e.target.id === 'items-per-page') {
+                itemsPerPage = parseInt(e.target.value);
+                currentPage = 1;
+                render();
             }
-        }
-        for (let i = startPage; i <= endPage; i++) {
-            buttonsHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
-        }
-        buttonsHTML += `<button class="page-btn" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'disabled' : ''}>&raquo;</button>`;
-        paginationContainer.insertAdjacentHTML('beforeend', buttonsHTML);
+        });
+
+        paginationWrapper.addEventListener('click', (e) => {
+            const target = e.target;
+            if (target.dataset.action === 'prev' && currentPage > 1) {
+                currentPage--;
+                render();
+            } else if (target.dataset.action === 'next' && currentPage < totalPages) {
+                currentPage++;
+                render();
+            }
+        });
     }
+
     function render() {
         renderTable();
         renderPagination();
         updateSelectedCount();
     }
-    function updateValidateButtonState() {
-        validateDataBtn.disabled = selectedLaudos.size === 0;
-    }
 
-    // --- 5. LÓGICA DO MODAL (CONFIRMAÇÃO) ---
-    let modal;
-    function createConfirmationModal() {
-        const template = document.getElementById('template-modal-confirmacao');
-        if (!template) return;
-        const modalClone = template.content.cloneNode(true);
-        document.body.appendChild(modalClone);
-
-        modal = document.getElementById('confirmation-modal');
-        const modalCloseBtn = document.getElementById('modal-close-btn');
-        const modalConfirmBtn = document.getElementById('modal-confirm-validate');
-
-        modalCloseBtn.addEventListener('click', hideModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
+    // --- 5. LÓGICA DO MODAL ---
+    function setupModal() {
+        let modal = document.getElementById('confirmation-modal');
         
-        modalConfirmBtn.addEventListener('click', () => {
-            allLaudos = allLaudos.filter(laudo => !selectedLaudos.has(laudo.id));
-            selectedLaudos.clear();
-            currentPage = 1;
-            render();
-            hideModal();
-            updateValidateButtonState();
-        });
-    }
-    function showModal() { if(modal) modal.classList.remove('hidden'); }
-    function hideModal() { if(modal) modal.classList.add('hidden'); }
-
-    // --- 6. LÓGICA DO TOAST (NOTIFICAÇÃO) ---
-    function createToastContainer() {
-        const toastContainer = document.createElement('div');
-        toastContainer.id = 'toast-container';
-        document.body.prepend(toastContainer);
-    }
-    function showToast(message) {
-        const toastContainer = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = 'toast-message success';
-        toast.innerHTML = `<span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C3.58 0 0 3.58 0 8C0 12.42 3.58 16 8 16C12.42 16 16 12.42 16 8C16 3.58 12.42 0 8 0ZM7 11.5L3.5 8L4.91 6.59L7 8.67L11.09 4.59L12.5 6L7 11.5Z" fill="#3E8635"/></svg> ${message}</span><a href="#" class="toast-clear">Limpar</a>`;
-        toastContainer.appendChild(toast);
-        toast.querySelector('.toast-clear').addEventListener('click', (e) => { e.preventDefault(); toast.remove(); });
-        setTimeout(() => { if (toast) toast.remove(); }, 5000);
-    }
-
-    // --- 7. LÓGICA DO MODAL (DETALHES) ---
-    let detailsModal;
-    let currentLaudoId = null;
-    let detailSpans = [];
-    let msgSuccess;
-    let msgDefault;
-
-    function createDetailsModal() {
-        const template = document.getElementById('template-modal-detalhes');
-        if (!template) return;
-        const modalClone = template.content.cloneNode(true);
-        document.body.appendChild(modalClone);
-
-        detailsModal = document.getElementById('details-modal');
-        detailSpans = detailsModal.querySelectorAll('#details-modal-body span[id^="detail-"]');
-        msgSuccess = document.getElementById('edit-success-msg');
-        msgDefault = document.getElementById('edit-status-default');
-
-        document.getElementById('details-close-btn').addEventListener('click', hideDetailsModal);
-        detailsModal.addEventListener('click', (e) => {
-            if (e.target === detailsModal) hideDetailsModal();
-        });
-        document.getElementById('modal-edit-btn').addEventListener('click', toggleEditMode);
-    }
-
-    function showDetailsModal(laudoId) {
-        if (!detailsModal) return;
-        
-        currentLaudoId = laudoId;
-        const laudo = allLaudos.find(l => l.id === laudoId);
-        if (!laudo) return;
-
-        setDisplayMode(laudo, false); 
-        msgSuccess.classList.add('hidden');
-        msgDefault.classList.remove('hidden');
-        
-        detailsModal.querySelector('#details-title').textContent = `Detalhes do Laudo ${laudo.nomeLaudo}`;
-        detailsModal.classList.remove('hidden');
-    }
-
-    function hideDetailsModal() {
-        if(detailsModal) detailsModal.classList.add('hidden');
-        currentLaudoId = null;
-    }
-    
-    function updateDetail(span, laudo) {
-        const key = span.id.replace('detail-', '');
-        const value = laudo.detalhes[key];
-        const isEdited = laudo.detalhes_edited[key] === true;
-        let displayValue = value || 'Não encontrado';
-        
-        if (isEdited) {
-            displayValue = `<span class="edited-asterisk">*</span>${displayValue}`;
-        }
-        
-        span.innerHTML = displayValue;
-
-        if (value) {
-            span.classList.remove('not-found');
-        } else {
-            span.classList.add('not-found');
-        }
-    }
-
-    function setEditMode(laudo) {
-        const editBtn = document.getElementById('modal-edit-btn');
-        editBtn.textContent = 'Salvar Alterações';
-        detailsModal.classList.add('edit-mode');
-        msgSuccess.classList.add('hidden');
-        msgDefault.classList.add('hidden');
-
-        detailSpans.forEach(span => {
-            const key = span.id.replace('detail-', '');
-            const value = laudo.detalhes[key] || '';
-            
-            span.textContent = value;
-            span.contentEditable = 'true';
-        });
-    }
-
-    function setDisplayMode(laudo, saveData = false) {
-        const editBtn = document.getElementById('modal-edit-btn');
-        editBtn.textContent = 'Editar Dados';
-        detailsModal.classList.remove('edit-mode');
-
-        detailSpans.forEach(span => {
-            if (saveData) {
-                const key = span.id.replace('detail-', '');
-                const newValue = span.textContent;
-                const originalValue = laudo.detalhes[key] || '';
-                
-                if (originalValue !== newValue) {
-                    laudo.detalhes[key] = newValue;
-                    laudo.detalhes_edited[key] = true;
-                }
+        if (!modal) {
+            const template = document.getElementById('template-modal-confirmacao');
+            if (template) {
+                const clone = template.content.cloneNode(true);
+                document.body.appendChild(clone);
+                modal = document.getElementById('confirmation-modal');
             }
-            span.contentEditable = 'false';
-            updateDetail(span, laudo);
-        });
-
-        if (saveData) {
-            msgDefault.classList.add('hidden');
-            msgSuccess.classList.remove('hidden');
-            setTimeout(() => {
-                msgSuccess.classList.add('hidden');
-                msgDefault.classList.remove('hidden');
-            }, 2000);
-        } else {
-            // Garante que a mensagem default esteja visível ao carregar
-            msgDefault.classList.remove('hidden');
         }
-    }
-
-    function toggleEditMode() {
-        if (!currentLaudoId) return;
-        const laudo = allLaudos.find(l => l.id === currentLaudoId);
-        if (!laudo) return;
-        const isEditMode = detailsModal.classList.contains('edit-mode');
-        if (isEditMode) {
-            setDisplayMode(laudo, true);
-        } else {
-            setEditMode(laudo);
+        
+        if (!modal) {
+            console.error('Modal não encontrado');
+            return;
         }
-    }
 
-    // --- 8. CRIAÇÃO DE ELEMENTOS DINÂMICOS ---
-    function createItemsPerPageSelector() {
-        const selectorContainer = document.createElement('div');
-        selectorContainer.classList.add('items-per-page');
-        selectorContainer.innerHTML = `<label for="items-per-page-select">Itens por página</label><select id="items-per-page-select"><option value="4" selected>4</option><option value="8">8</option><option value="16">16</option><option value="32">32</option></select>`;
-        const bottomRow = document.createElement('div');
-        bottomRow.classList.add('card-footer-bottom-row');
-        const paginationEl = document.getElementById('pagination-container');
-        bottomRow.appendChild(selectorContainer);
-        if (paginationEl) bottomRow.appendChild(paginationEl);
-        cardFooter.appendChild(bottomRow);
-        document.getElementById('items-per-page-select').addEventListener('change', (e) => {
-            itemsPerPage = parseInt(e.target.value, 10);
-            currentPage = 1;
+        // GARANTIR que o modal comece fechado
+        modal.classList.add('hidden');
+
+        const btnCancel = document.getElementById('btn-cancel-delete');
+        const btnConfirm = document.getElementById('btn-confirm-delete');
+        
+        if (!btnCancel || !btnConfirm) {
+            console.error('Botões do modal não encontrados');
+            return;
+        }
+
+        const title = modal.querySelector('h3');
+        const text = modal.querySelector('p');
+
+        btnCancel.onclick = () => { 
+            modal.classList.add('hidden'); 
+            itemToDelete = null; 
+        };
+        
+        btnConfirm.onclick = () => {
+            if (itemToDelete === 'ALL') {
+                allLaudos = [];
+                selectedLaudos.clear();
+                showToast('Todos os laudos foram excluídos.');
+            } else if (itemToDelete === 'VALIDATE') {
+                const count = selectedLaudos.size;
+                allLaudos = allLaudos.filter(l => !selectedLaudos.has(l.id));
+                selectedLaudos.clear();
+                showToast(`${count} laudos validados e enviados para exportação.`);
+            } else if (itemToDelete) {
+                const laudo = allLaudos.find(l => l.id === itemToDelete);
+                const nome = laudo ? laudo.nomeArquivo : 'Item';
+                allLaudos = allLaudos.filter(l => l.id !== itemToDelete);
+                selectedLaudos.delete(itemToDelete);
+                showToast(`Laudo ${nome} excluído com sucesso.`);
+            }
+            
+            modal.classList.add('hidden');
+            itemToDelete = null;
+            if ((currentPage - 1) * itemsPerPage >= allLaudos.length && currentPage > 1) currentPage--;
             render();
-        });
+        };
+
+        window.openModal = (action, id = null) => {
+            if (action === 'DELETE_ONE') {
+                itemToDelete = id;
+                title.textContent = 'Confirmar Exclusão';
+                text.textContent = 'Tem certeza que deseja excluir este item?';
+                btnConfirm.className = 'btn-danger';
+                btnConfirm.textContent = 'Excluir';
+            } else if (action === 'DELETE_ALL') {
+                itemToDelete = 'ALL';
+                title.textContent = 'Excluir Tudo';
+                text.textContent = 'Tem certeza que deseja excluir TODOS os laudos?';
+                btnConfirm.className = 'btn-danger';
+                btnConfirm.textContent = 'Excluir Tudo';
+            } else if (action === 'VALIDATE') {
+                itemToDelete = 'VALIDATE';
+                title.textContent = 'Validar Dados';
+                text.textContent = `Confirma a validação de ${selectedLaudos.size} laudos selecionados?`;
+                btnConfirm.className = 'btn-primary';
+                btnConfirm.style.backgroundColor = '#0047bb';
+                btnConfirm.style.color = 'white';
+                btnConfirm.textContent = 'Confirmar';
+            }
+            modal.classList.remove('hidden');
+        }
     }
 
-    // --- 9. EVENT LISTENERS ---
-    validateDataBtn.addEventListener('click', () => {
-        if (selectedLaudos.size > 0) showModal();
-        else alert('Por favor, selecione pelo menos um laudo para validar.');
+    // --- 6. LÓGICA DO TOAST ---
+    function createToastStyles() {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+            .toast-message { 
+                background: #fff; border-left: 4px solid #22c55e; 
+                padding: 15px 20px; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+                display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #333; min-width: 300px; 
+                animation: slideIn 0.3s ease-out;
+            }
+            .toast-message svg { color: #22c55e; width: 20px; height: 20px; }
+            @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        `;
+        document.head.appendChild(style);
+        
+        const container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    function showToast(message) {
+        const container = document.getElementById('toast-container');
+        if(!container) return;
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.innerHTML = `
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 6.5-4 4a.5.5 0 0 1-.7 0l-2-2a.5.5 0 0 1 .7-.7L7 9.29l3.65-3.64a.5.5 0 0 1 .7.7z"/></svg>
+            <span>${message}</span>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => { 
+            toast.style.opacity = '0'; 
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    // --- 7. EVENT LISTENERS ---
+    btnValidate.addEventListener('click', () => {
+        console.log('Validar clicado, selecionados:', selectedLaudos.size);
+        if (selectedLaudos.size > 0) window.openModal('VALIDATE');
     });
 
     selectAllBtn.addEventListener('click', () => {
+        console.log('Select All clicado');
         allLaudos.forEach(laudo => {
             if (laudo.acaoRecomendada !== 'Descartado') selectedLaudos.add(laudo.id);
         });
         render();
-        updateValidateButtonState();
-    });
-    
-    deselectAllBtn.addEventListener('click', () => {
-        if (confirm('Tem certeza que deseja excluir TODOS os laudos?')) {
-            allLaudos = [];
-            selectedLaudos.clear();
-            currentPage = 1;
-            render();
-            showToast('Todos os laudos foram excluídos.');
-            updateValidateButtonState();
-        }
     });
 
-    // (CORRIGIDO) O listener da tabela agora usa 'nomeArquivo' no toast
+    deselectAllBtn.addEventListener('click', () => {
+        console.log('Delete All clicado');
+        if(allLaudos.length > 0) window.openModal('DELETE_ALL');
+    });
+
     tableBody.addEventListener('click', (e) => {
         const target = e.target;
-        const deleteButton = target.closest('.btn-delete');
-        const checkbox = target.closest('.custom-checkbox');
-        const laudoLink = target.closest('.laudo-name-link');
         
-        if (deleteButton) {
-            const id = parseInt(deleteButton.dataset.id, 10);
-            
-            // (CORREÇÃO) Busca o nome ANTES de deletar
-            const laudoParaExcluir = allLaudos.find(laudo => laudo.id === id);
-            const nomeArquivo = laudoParaExcluir ? laudoParaExcluir.nomeArquivo : `ID ${id}`;
+        const btnTrash = target.closest('.btn-trash');
+        if (btnTrash) {
+            const id = parseInt(btnTrash.dataset.id);
+            window.openModal('DELETE_ONE', id);
+            return;
+        }
 
-            allLaudos = allLaudos.filter(laudo => laudo.id !== id);
-            selectedLaudos.delete(id);
-            render();
-            
-            showToast(`Laudo ${nomeArquivo} excluído com sucesso`); // <-- CORRIGIDO
-            updateValidateButtonState();
+        if (target.classList.contains('row-checkbox') || target.closest('.custom-checkbox')) {
+            const checkbox = target.classList.contains('row-checkbox') ? target : target.querySelector('.row-checkbox');
+            if (checkbox) {
+                const id = parseInt(checkbox.dataset.id);
+                if (checkbox.checked) {
+                    selectedLaudos.add(id);
+                } else {
+                    selectedLaudos.delete(id);
+                }
+                updateSelectedCount();
+            }
+            return;
+        }
 
-        } else if (checkbox) {
-            if (checkbox.classList.contains('disabled')) return;
-            const input = checkbox.querySelector('.row-checkbox');
-            if (target.tagName !== 'INPUT') input.checked = !input.checked;
-            const id = parseInt(input.dataset.id, 10);
-            if (input.checked) selectedLaudos.add(id); else selectedLaudos.delete(id);
-            updateSelectedCount();
-            updateValidateButtonState();
-        } else if (laudoLink) {
+        const laudoLink = target.closest('.laudo-link');
+        if (laudoLink) {
             e.preventDefault();
-            const id = parseInt(laudoLink.dataset.id, 10);
-            showDetailsModal(id);
+            const id = parseInt(laudoLink.dataset.id);
+            console.log('Abrir laudo:', id);
+            return;
         }
     });
 
-    paginationContainer.addEventListener('click', (e) => {
-        const target = e.target.closest('.page-btn');
-        if (target && !target.disabled) {
-            currentPage = parseInt(target.dataset.page, 10);
-            render();
-        }
-    });
-
-    // --- 10. INICIALIZAÇÃO ---
+    // --- 8. INICIALIZAÇÃO ---
     function init() {
+        console.log('Inicializando aplicação...');
+        
+        if (!tableBody) {
+            console.error('Elemento table-body não encontrado!');
+            return;
+        }
+        if (!selectAllBtn) {
+            console.error('Botão select-all-text não encontrado!');
+            return;
+        }
+        if (!deselectAllBtn) {
+            console.error('Botão deselect-all-text não encontrado!');
+            return;
+        }
+        if (!btnValidate) {
+            console.error('Botão btn-validate não encontrado!');
+            return;
+        }
+
+        createToastStyles();
         createMockData();
-        createItemsPerPageSelector();
-        createToastContainer();
-        createConfirmationModal();
-        createDetailsModal();
+        setupModal();
         render();
-        validateDataBtn.disabled = true;
+        updateSelectedCount();
+        
+        console.log('Aplicação inicializada com sucesso!');
     }
 
     init();

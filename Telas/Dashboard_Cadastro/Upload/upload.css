@@ -1,259 +1,144 @@
-/* upload-styles.css - Estilo Azul Moderno para Tela G */
-
-/* Paleta Azul: #007bff (Primário), #1e90ff (Acento), #f0f8ff (Fundo leve) */
+:root {
+    --color-primary: #0047bb; 
+    --color-primary-hover: #003399;
+    --color-bg-page: #f0f2f5;
+    --color-bg-card: #ffffff;
+    --color-text: #1f2937;
+    --color-text-muted: #6b7280;
+    --color-border: #e5e7eb;
+    --color-success: #22c55e;
+    --font-family: 'Inter', sans-serif;
+}
 
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* Fundo muito claro, replicando o figma [1, 2] */
+    font-family: var(--font-family);
+    background-color: var(--color-bg-page);
     margin: 0;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    color: var(--color-text);
+    padding-bottom: 60px;
 }
 
-/* ----------------------------------
-   1. NavBar e Menu (Predominantemente Azul)
-   ---------------------------------- */
-
-.navbar {
-    background-color: #007bff; /* Azul primário forte */
-    color: white;
-    padding: 10px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* === CABEÇALHO (Igual ao da tela de Edição) === */
+.main-header {
+    background: linear-gradient(90deg, #0052cc 0%, #003399 100%);
+    color: white; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
-.navbar-left {
-    display: flex;
-    flex-direction: column;
+.header-top {
+    height: 80px; border-bottom: 1px solid rgba(255,255,255,0.15);
 }
-
-.logo-text {
-    font-size: 1.5em;
-    font-weight: bold;
+.container-full {
+    width: 100%; padding: 0 40px; box-sizing: border-box;
+    display: flex; justify-content: space-between; align-items: center;
 }
+.header-brand, .header-logos { display: flex; align-items: center; }
+.logo-box { display: flex; align-items: center; gap: 12px; }
+.brand-text h1 { margin: 0; font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
+.brand-text span { font-size: 0.85rem; opacity: 0.9; font-weight: 300; display: block; }
+.gov-logo { height: 50px; width: auto; object-fit: contain; }
 
-.subtitle-text {
-    font-size: 0.8em;
-    opacity: 0.8;
+.header-nav { height: 50px; }
+.nav-links { display: flex; height: 100%; gap: 5px; }
+.nav-links a {
+    color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem;
+    padding: 0 15px; height: 100%; display: flex; align-items: center;
+    border-bottom: 3px solid transparent; transition: all 0.2s;
 }
-
-/* Menu de Navegação Horizontal */
-.main-menu {
-    display: flex;
-    align-items: center;
-    padding: 10px 40px;
-    background-color: white;
-    border-bottom: 1px solid #e0e0e0;
+.nav-links a:hover, .nav-links a.active {
+    color: white; font-weight: 600; border-bottom-color: white; background: rgba(255,255,255,0.1);
 }
+.divider { color: rgba(255,255,255,0.3); font-size: 0.8rem; margin: 0 5px; display: flex; align-items: center; }
+.user-info { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+.avatar { width: 32px; height: 32px; background: white; color: var(--color-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; }
 
-.menu-item {
-    text-decoration: none;
-    color: #555;
-    padding: 8px 15px;
-    margin-right: 15px;
-    transition: color 0.3s, border-bottom 0.3s;
+/* === STEPPER === */
+.stepper-container {
+    max-width: 600px; margin: 30px auto 40px auto;
+    display: flex; align-items: center; justify-content: space-between; position: relative;
 }
-
-/* Destaque Azul para o item ativo, como no Figma [1, 2] */
-.menu-item.active {
-    color: #007bff; 
-    border-bottom: 3px solid #007bff;
-    font-weight: 600;
-}
-
-.user-info {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-}
-
-.avatar {
-    margin-left: 10px;
-    width: 30px;
-    height: 30px;
-    background-color: #007bff; /* Azul para o avatar */
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-}
-
-/* ----------------------------------
-   2. Stepper (Indicador de Progresso)
-   ---------------------------------- */
-
-.content-wrapper {
-    padding: 30px 40px;
-    flex-grow: 1; /* Ocupa o espaço restante */
-}
-
-.stepper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 40px;
-}
-
-.step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 100px;
-}
-
+.step { display: flex; flex-direction: column; align-items: center; z-index: 2; }
 .step-circle {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    color: white;
-    background-color: #ced4da; /* Cinza inativo */
-    transition: background-color 0.3s;
+    width: 32px; height: 32px; border-radius: 50%; background-color: #e5e7eb; color: #6b7280;
+    display: flex; align-items: center; justify-content: center; font-weight: 600;
+    border: 2px solid white; box-shadow: 0 0 0 2px #f0f2f5; margin-bottom: 8px;
+}
+.step-label { font-size: 0.85rem; font-weight: 500; color: #6b7280; }
+
+.step.active .step-circle { background-color: var(--color-success); color: white; box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--color-success); }
+.step.active .step-label { color: #1f2937; font-weight: 700; }
+
+.step-line { flex-grow: 1; height: 4px; background-color: #e5e7eb; margin: -25px 10px 0 10px; z-index: 1; }
+.step-line.completed { background-color: var(--color-success); }
+
+
+/* === CARD PRINCIPAL === */
+.app-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.main-card {
+    background: white; border-radius: 12px; padding: 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--color-border);
+    min-height: 400px; /* Garante altura visual */
 }
 
-/* O gradiente verde/azul no passo ativo simula o destaque moderno, conforme o exemplo [1, 2] */
-.step.active .step-circle {
-    background: linear-gradient(45deg, #28a745, #1e90ff); /* Verde (Figma [1, 2]) misturado com Azul (Nova Paleta) */
-}
+.page-header { margin-bottom: 30px; }
+.page-header h2 { font-size: 1.6rem; font-weight: 700; margin: 0 0 8px 0; }
+.page-header p { color: var(--color-text-muted); margin: 0; font-size: 0.95rem; }
 
-.step-label {
-    margin-top: 5px;
-    font-size: 0.9em;
-    color: #6c757d;
-}
-
-.progress-line {
-    height: 4px;
-    width: 100px;
-    background-color: #ced4da;
-    margin: 0 10px;
-    transition: background-color 0.3s;
-}
-
-.progress-line.active {
-    background-color: #28a745; /* Linha de progresso ativa */
-}
-
-
-/* ----------------------------------
-   3. Área de Upload (Drop Zone)
-   ---------------------------------- */
-
-.upload-section h2 {
-    font-size: 1.8em;
-    color: #333;
-    margin-bottom: 5px;
-}
-
-.upload-section .subtitle {
-    color: #6c757d;
-    margin-bottom: 25px;
-}
-
+/* === ÁREA DE UPLOAD (DROPZONE) === */
 .drop-zone {
-    /* Estilo da Captura de tela [1, 2]: Borda tracejada azul clara */
-    border: 2px dashed #a0c3ff;
-    background-color: #e6f7ff; /* Fundo azul muito claro */
+    background-color: #eaf8ff; /* Azul claro do fundo */
+    border: 2px dashed #93c5fd; /* Borda tracejada azul */
     border-radius: 12px;
     padding: 60px 20px;
     text-align: center;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: all 0.3s ease;
     cursor: pointer;
+    position: relative;
 }
 
-.drop-zone.drag-over {
-    background-color: #d1ecf1;
-    border-color: #007bff;
+.drop-zone:hover, .drop-zone.drag-over {
+    background-color: #dbeafe;
+    border-color: var(--color-primary);
 }
 
-.upload-icon {
-    font-size: 4em;
-    color: #007bff;
-    display: block;
-    margin-bottom: 10px;
+.upload-content {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px;
 }
 
-.drop-zone a {
-    color: #007bff; /* Clique para selecionar em Azul */
-    text-decoration: none;
-    font-weight: bold;
+.upload-icon-svg { color: var(--color-primary); }
+
+.drop-text {
+    font-size: 1.1rem; color: #1f2937; margin: 0;
+}
+.drop-text a {
+    color: var(--color-primary); text-decoration: underline; font-weight: 600;
 }
 
-.formats {
-    font-size: 0.8em;
-    color: #6c757d;
-    margin-top: 10px;
+.formats-text {
+    font-size: 0.9rem; color: #9ca3af; margin: 0;
 }
 
-/* --- Lista de Arquivos --- */
+/* LISTA DE ARQUIVOS */
 .file-list {
-    list-style: none;
-    padding: 10px 0; /* Aumenta o padding interno */
-    max-height: 200px;
-    overflow-y: auto;
-    /* Fundo branco ou claro para que o verde do arquivo se destaque */
-    background: white; 
-    border: 1px solid #e0e0e0; 
-    border-radius: 8px;
-    margin-top: 15px;
+    list-style: none; padding: 0; margin-top: 20px;
 }
-
 .file-list li {
-    padding: 10px 15px;
-    border-bottom: 1px solid #f0f0f0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.95em;
+    background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;
+    padding: 12px 15px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
 }
-
-/* --- Estilo de Visualização do Arquivo (Fundo Verde e Check) --- */
-
-.file-info {
-    /* Fundo verde suave para sinalizar 'Importado com Sucesso' */
-    background-color: #d4edda; 
-    color: #155724; /* Texto em verde escuro para contraste */
-    padding: 6px 12px;
-    border-radius: 6px;
-    display: inline-flex;
-    align-items: center;
-    font-weight: 600;
-    /* Sombra sutil para destacar o elemento */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.check-icon {
-    /* Estilização do checkmark */
-    margin-right: 8px;
-    color: #28a745; /* Verde de sucesso forte */
-    font-size: 1.1em;
-}
-
-/* --- Estilização Melhorada do Botão de Remover --- */
-
+.file-info { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.9rem;}
+.check-icon { color: var(--color-success); font-weight: bold; }
 .remove-file-btn {
-    /* Aparência mais compacta e visualmente distinta (Cor de Perigo) */
-    background: none;
-    color: #dc3545; /* Vermelho padrão para ação de remover */
-    border: 1px solid #dc3545;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8em;
-    font-weight: bold;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    background: none; border: 1px solid #ef4444; color: #ef4444;
+    padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
+    transition: all 0.2s;
 }
+.remove-file-btn:hover { background: #ef4444; color: white; }
 
-.remove-file-btn:hover {
-    /* Efeito de hover: fundo vermelho, texto branco */
-    background-color: #dc3545;
-    color: white;
+.action-area { margin-top: 30px; display: flex; justify-content: center; }
+.btn-primary-large {
+    background-color: var(--color-primary); color: white; border: none;
+    padding: 12px 40px; font-size: 1rem; font-weight: 600; border-radius: 8px;
+    cursor: pointer; box-shadow: 0 4px 6px rgba(0, 71, 187, 0.2);
 }
+.btn-primary-large:hover { background-color: var(--color-primary-hover); }
+.hidden { display: none; }
