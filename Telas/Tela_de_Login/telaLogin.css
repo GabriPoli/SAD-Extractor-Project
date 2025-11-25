@@ -9,7 +9,7 @@ body {
     background-color: #f0f4f8; 
     
     /* 1. RESTAURAÇÃO DA IMAGEM DE FUNDO */
-    background-image: url('/SAD-Extractor-Project/Arquivos_Adicionais/SecretariaAdministracao-PE.png');
+    background-image: url('../../Arquivos_Adicionais/SecretariaAdministracao-PE.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
