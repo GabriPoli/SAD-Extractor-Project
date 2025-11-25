@@ -70,7 +70,7 @@ body {
 
 /* CORREÇÃO DO BUG DA LOGO */
 .gov-logo {
-    height: 70px; /* Altura controlada para não estourar os 80px do header */
+    height: 50px; /* Altura controlada para não estourar os 80px do header */
     width: auto;
     object-fit: contain;
     display: block;

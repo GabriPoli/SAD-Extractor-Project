@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAD-Extractor | Exportação</title>
+    <link rel="stylesheet" href="exportacao.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-top container-full">
+            <div class="header-brand">
+                <div class="logo-box">
+                    <svg class="icon-doc" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <div class="brand-text">
+                        <h1>SAD Extractor</h1>
+                        <span>Sistema de Extração de dados imobiliários</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-logos">
+                <img src="/images/logoSADGovPE.png" alt="Governo de Pernambuco" class="gov-logo"> 
+            </div>
+        </div>
+
+        <div class="header-nav container-full">
+            <nav class="nav-links">
+                <a href="#">Upload de documentos</a>
+                <span class="divider">|</span>
+                <a href="#" class="active">Editar dados</a> <span class="divider">|</span>
+                <a href="#">Histórico de Laudos</a>
+                <span class="divider">|</span>
+                <a href="#">Histórico de usuários</a>
+                <span class="divider">|</span>
+                <a href="#">Indicadores</a>
+                <span class="divider">|</span>
+                <a href="#">Configurações</a>
+            </nav>
+            <div class="user-info">
+                <span>Olá, <strong>Nome do usuário</strong></span>
+                <div class="avatar">TT</div>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+        
+        <div class="stepper-container">
+            <div class="step completed">
+                <div class="step-circle">1</div>
+                <span class="step-label">Upload</span>
+            </div>
+            <div class="step-line completed"></div>
+            <div class="step completed">
+                <div class="step-circle">2</div>
+                <span class="step-label">Edição</span>
+            </div>
+            <div class="step-line completed"></div>
+            <div class="step active">
+                <div class="step-circle">3</div>
+                <span class="step-label">Exportação</span>
+            </div>
+        </div>
+
+        <div class="main-card">
+            
+            <div class="page-header">
+                <h2>Exportação dos Laudos validados</h2>
+                <p>Exporte os dados que foram validados no formato que desejar</p>
+            </div>
+
+            <div class="table-card-inner">
+                <div class="table-header-title">
+                    <h4>Tabela padrão</h4>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="40"></th> 
+                                <th>ID</th>
+                                <th>Nome do arquivo <span class="sort-icon">⇅</span></th>
+                                <th>Dados extraídos <span class="sort-icon">⇅</span></th>
+                                <th>% <span class="sort-icon">⇅</span></th>
+                                <th>Confiabilidade <span class="sort-icon">⇅</span></th>
+                                <th>Ação recomendada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    <div class="footer-left">
+                        <span class="action-link" id="select-all-text">Selecionar tudo</span>
+                    </div>
+                    <div id="pagination-wrapper" class="footer-right"></div>
+                </div>
+            </div>
+
+            <div class="export-bottom-area">
+                <div id="selected-count-badge" class="selected-badge hidden">0 laudos selecionados</div>
+
+                <div class="export-controls-wrapper">
+                    <span class="export-label">Opções para exportação dos laudos:</span>
+                    
+                    <select id="export-format" class="form-select">
+                        <option value="" disabled selected>Selecionar formato</option>
+                        <option value="xlsx">.XLSX (Excel)</option>
+                        <option value="csv">.CSV (Separado por vírgula)</option>
+                        <option value="pdf">.PDF (Relatório)</option>
+                        <option value="json">.JSON (Integração)</option>
+                    </select>
+
+                    <button id="btn-download" class="btn-primary-large" disabled>Baixar laudos</button>
+                </div>
+            </div>
+
+        </div> 
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="exportacao.js"></script>
+</body>
+</html>
