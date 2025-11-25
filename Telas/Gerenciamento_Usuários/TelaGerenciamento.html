@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAD Extractor - Configuração de Contas</title>
+    <link rel="stylesheet" href="TelaGerenciamento.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-top container-full">
+            <div class="header-brand">
+                <div class="logo-box">
+                    <svg class="icon-doc" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <div class="brand-text">
+                        <h1>SAD Extractor</h1>
+                        <span>Sistema de Extração de dados imobiliários</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-logos">
+                <img src="/images/logoSADGovPE.png" alt="Governo de Pernambuco" class="gov-logo"> 
+            </div>
+        </div>
+
+        <div class="header-nav container-full">
+            <nav class="nav-links">
+                <a href="#">Upload de documentos</a>
+                <span class="divider">|</span>
+                <a href="#">Editar dados</a>
+                <span class="divider">|</span>
+                <a href="#">Histórico de Laudos</a>
+                <span class="divider">|</span>
+                <a href="#">Histórico de usuários</a>
+                <span class="divider">|</span>
+                <a href="#">Indicadores</a>
+                <span class="divider">|</span>
+                <a href="#" class="active">Gerenciamento de usuários</a>
+            </nav>
+            <div class="user-info">
+                <span>Olá, <strong>Nome do usuário</strong></span>
+                <div class="avatar">TT</div>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+        </div>
+    </header>
+    <main class="app-container main-content">
+        <div class="card">
+
+            <h2 class="card-title">
+                Configurações e cadastros dos usuários no sistema
+            </h2>
+
+            <section class="new-user-section" style="margin-bottom: 2rem;">
+                <h3>Novo usuário</h3>
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label for="newUserNameInput">Nome</label>
+                        <input type="text" id="newUserNameInput" placeholder="Nome completo">
+                    </div>
+                    <div class="form-group" style="min-width: 250px;">
+                        <label for="newUserEmailInput">Email</label>
+                        <input type="email" id="newUserEmailInput" placeholder="email@sad.pe.gov.br">
+                    </div>
+                    <div class="form-group">
+                        <label for="newUserRoleSelect">Função</label>
+                        <select id="newUserRoleSelect">
+                            <option value="" disabled selected>Selecione o cargo</option>
+                            <option value="Cadastro">Usuário Cadastral</option>
+                            <option value="Gestão">Usuário Gestor</option>
+                            <option value="Administrador">Usuário Administrador</option>
+                        </select>
+                    </div>
+                    <button id="createUserButton" class="btn btn-create">
+                        <i class="fas fa-plus" style="margin-right: 0.25rem;"></i> Criar
+                    </button>
+                </div>
+            </section>
+
+            <section class="table-section">
+                <h3>Tabela padrão</h3>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="sortable-header" data-column="id">
+                                    ID <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header" data-column="nome">
+                                    Nome <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header" data-column="email">
+                                    E-mail <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header" data-column="tipo">
+                                    Tipo <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header" data-column="ultimo_acesso">
+                                    Último acesso <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="sortable-header text-center" data-column="total_acessos">
+                                    Total de acessos <i class="fas fa-sort sort-icon"></i>
+                                </th>
+                                <th class="text-center">
+                                    Ações
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody> 
+                    </table>
+                </div>
+
+                <div id="messageBox" style="display: none;" role="alert"></div>
+            </section>
+
+        </div>
+    </main>
+    
+    <div id="actionModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle" class="modal-title"></h3>
+            <p id="modalMessage" class="modal-message"></p>
+            <div id="modalContent"></div>
+            <div class="modal-actions">
+                <button id="modalCancelButton" onclick="closeModal()" class="btn btn-cancel">Cancelar</button>
+                <button id="modalConfirmButton" class="btn btn-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        let usersData = [
+            { id: 4, nome: 'Ana Costa', email: 'ana.costa@sad.pe.gov.br', tipo: 'Cadastro', ultimoAcesso: '10/07/2025', totalAcessos: 5, ativo: true },
+            { id: 3, nome: 'Pedro Silva', email: 'pedro.silva@sad.pe.gov.br', tipo: 'Gestão', ultimoAcesso: '17/07/2025', totalAcessos: 10, ativo: true },
+            { id: 2, nome: 'João Ferreira', email: 'joao.ferreira@sad.pe.gov.br', tipo: 'Cadastro', ultimoAcesso: '15/07/2025', totalAcessos: 2, ativo: true },
+            { id: 1, nome: 'Maria Souza', email: 'maria.souza@sad.pe.gov.br', tipo: 'Administrador', ultimoAcesso: '18/07/2025', totalAcessos: 10, ativo: false }, 
+        ];
+
+        let usersTableBody, messageBox, createUserButton, actionModal, modalTitle, modalMessage, modalContent, modalConfirmButton, modalCancelButton;
+
+        function showMessage(message, type = 'success') {
+            if (!messageBox) return; 
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            messageBox.classList.remove('msg-success', 'msg-error');
+            messageBox.classList.add(type === 'error' ? 'msg-error' : 'msg-success');
+            setTimeout(() => { messageBox.style.display = 'none'; }, 5000);
+        }
+
+        function openModal(title, message, confirmAction, content = null) {
+            if (!actionModal) return; 
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalConfirmButton.onclick = confirmAction;
+            modalContent.innerHTML = '';
+            if (content) {
+                modalContent.appendChild(content);
+                modalMessage.style.display = 'none'; 
+            } else {
+                modalMessage.style.display = 'block';
+            }
+            document.addEventListener('keydown', handleEscKey);
+            actionModal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            if (!actionModal) return; 
+            actionModal.style.display = 'none';
+            document.removeEventListener('keydown', handleEscKey);
+        }
+
+        function handleEscKey(event) { if (event.key === 'Escape') closeModal(); }
+
+        function renderUserRow(user) {
+            const row = document.createElement('tr');
+            row.id = `user-row-${user.id}`;
+            const inactivateButtonText = user.ativo ? 'Inativar' : 'Ativar';
+            const inactivateButtonClass = user.ativo ? 'btn-inativar' : 'btn-ativar';
+            const statusText = user.ativo ? user.tipo : 'INATIVO';
+            if (!user.ativo) row.classList.add('inativo-row');
+
+            row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.nome}</td>
+                <td>${user.email}</td>
+                <td>${statusText}</td>
+                <td>${user.ultimoAcesso}</td>
+                <td style="text-align: center;">${user.totalAcessos}</td>
+                <td class="actions-cell">
+                    <button class="btn-action ${inactivateButtonClass}" data-action="${user.ativo ? 'inativar' : 'ativar'}" data-user-id="${user.id}">
+                        <i class="${user.ativo ? 'fas fa-ban' : 'fas fa-check-circle'}"></i> ${inactivateButtonText}
+                    </button>
+                    <button class="btn-action btn-editar" data-action="editar" data-user-id="${user.id}">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn-action btn-email" data-action="reenviar-email" data-user-id="${user.id}">
+                        <i class="fas fa-envelope"></i> Reenviar E-mail
+                    </button>
+                </td>
+            `;
+            usersTableBody.appendChild(row);
+        }
+
+        function renderTable() {
+            if (!usersTableBody) return;
+            usersTableBody.innerHTML = ''; 
+            usersData.sort((a, b) => b.id - a.id).forEach(renderUserRow);
+        }
+
+        function handleCreateUser() {
+            const name = document.getElementById('newUserNameInput').value.trim();
+            const email = document.getElementById('newUserEmailInput').value.trim();
+            const role = document.getElementById('newUserRoleSelect').value;
+
+            if (!name || !email || !role) {
+                showMessage('Por favor, preencha todos os campos e selecione uma função.', 'error');
+                return;
+            }
+            if (!email.includes('@') || !email.includes('.')) {
+                showMessage('O e-mail parece inválido.', 'error');
+                return;
+            }
+
+            const newId = usersData.length > 0 ? Math.max(...usersData.map(u => u.id)) + 1 : 1; 
+            const newUser = {
+                id: newId, nome: name, email: email, tipo: role,
+                ultimoAcesso: new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                totalAcessos: 0, ativo: true
+            };
+
+            usersData.push(newUser);
+            renderTable();
+            showMessage(`Usuário "${name}" criado com sucesso!`);
+            document.getElementById('newUserNameInput').value = '';
+            document.getElementById('newUserEmailInput').value = '';
+            document.getElementById('newUserRoleSelect').value = '';
+        }
+
+        function handleInativar(id) {
+            const user = usersData.find(u => u.id === id);
+            if (!user) return;
+            const action = user.ativo ? 'Inativar' : 'Ativar';
+            const message = user.ativo ? `Você confirma a ação de ${action.toLowerCase()} o usuário ${user.nome}?` : `Você confirma a ação de ${action.toLowerCase()} o usuário ${user.nome}?`;
+
+            openModal(`${action} Usuário`, message, () => {
+                user.ativo = !user.ativo;
+                renderTable();
+                showMessage(`Usuário ${user.nome} foi ${user.ativo ? 'ativado' : 'inativado'} com sucesso.`);
+                closeModal();
+            });
+        }
+
+        function handleEditar(id) {
+            const user = usersData.find(u => u.id === id);
+            if (!user) return;
+            const editForm = document.createElement('div');
+            editForm.innerHTML = `
+                <div style="margin-bottom: 1rem;"><label style="display:block;font-size:0.875rem;font-weight:500;margin-bottom:0.25rem;">Nome</label><input type="text" id="editName" value="${user.nome}" style="display:block;width:100%;padding:0.625rem;border:1px solid #ccc;border-radius:0.5rem;"></div>
+                <div style="margin-bottom: 1rem;"><label style="display:block;font-size:0.875rem;font-weight:500;margin-bottom:0.25rem;">Senha</label><input type="password" id="editPassword" placeholder="Nova senha (opcional)" style="display:block;width:100%;padding:0.625rem;border:1px solid #ccc;border-radius:0.5rem;"></div>
+                <div style="margin-bottom: 1rem;"><label style="display:block;font-size:0.875rem;font-weight:500;margin-bottom:0.25rem;">Função</label><select id="editRole" style="display:block;width:100%;padding:0.625rem;border:1px solid #ccc;border-radius:0.5rem;"><option value="Cadastro" ${user.tipo==='Cadastro'?'selected':''}>Cadastro</option><option value="Gestão" ${user.tipo==='Gestão'?'selected':''}>Gestão</option><option value="Administrador" ${user.tipo==='Administrador'?'selected':''}>Administrador</option></select></div>
+            `;
+            
+            openModal('Editar Usuário', '', () => {
+                const newName = document.getElementById('editName').value.trim();
+                const newRole = document.getElementById('editRole').value;
+                if (!newName) { showMessage('O nome não pode estar vazio.', 'error'); closeModal(); return; }
+                user.nome = newName; user.tipo = newRole;
+                renderTable();
+                showMessage(`Usuário ${user.id} editado com sucesso.`);
+                closeModal();
+            }, editForm);
+        }
+
+        function handleReenviarEmail(id) {
+            const user = usersData.find(u => u.id === id);
+            if (!user) return;
+            openModal('Reenviar E-mail', `Deseja reenviar o e-mail de ativação para ${user.nome}?`, () => {
+                showMessage(`E-mail de ativação reenviado para ${user.email}.`);
+                closeModal();
+            });
+        }
+
+        window.onload = function() {
+            usersTableBody = document.getElementById('usersTableBody');
+            messageBox = document.getElementById('messageBox');
+            createUserButton = document.getElementById('createUserButton');
+            actionModal = document.getElementById('actionModal');
+            modalTitle = document.getElementById('modalTitle');
+            modalMessage = document.getElementById('modalMessage');
+            modalContent = document.getElementById('modalContent');
+            modalConfirmButton = document.getElementById('modalConfirmButton');
+            modalCancelButton = document.getElementById('modalCancelButton');
+            
+            createUserButton.addEventListener('click', handleCreateUser);
+            modalCancelButton.addEventListener('click', closeModal);
+
+            usersTableBody.addEventListener('click', (event) => {
+                const target = event.target.closest('.btn-action');
+                if (!target) return;
+                const userId = parseInt(target.dataset.userId);
+                const action = target.dataset.action;
+                if (isNaN(userId)) return;
+                if (action === 'inativar' || action === 'ativar') handleInativar(userId);
+                else if (action === 'editar') handleEditar(userId);
+                else if (action === 'reenviar-email') handleReenviarEmail(userId);
+            });
+            renderTable();
+        };
+    </script>
+</body>
+</html>
