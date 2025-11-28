@@ -10,23 +10,16 @@
 <body>
 
     <header class="main-header">
-        
         <div class="header-top container-full">
             <div class="header-brand">
                 <div class="logo-box">
-                    <svg class="icon-doc" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M14 2V8H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M12 18V12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M9 15H15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    <svg class="icon-doc" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     <div class="brand-text">
                         <h1>SAD Extractor</h1>
                         <span>Sistema de Extração de dados imobiliários</span>
                     </div>
                 </div>
             </div>
-
             <div class="header-logos">
                 <img src="/images/logoSADGovPE.png" alt="Governo de Pernambuco" class="gov-logo"> 
             </div>
@@ -100,9 +93,6 @@
             </div>
 
             <div class="table-card-inner">
-                <div class="table-header-title">
-                    <h4>Tabela padrão</h4>
-                </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
@@ -126,36 +116,38 @@
                         <span class="action-link" id="select-all-text">Selecionar tudo</span>
                         <span class="action-link danger" id="deselect-all-text">Excluir tudo</span>
                     </div>
-                    <div id="pagination-wrapper" class="footer-right">
-                        </div>
+                    <div id="pagination-wrapper" class="footer-right"></div>
                 </div>
             </div>
 
-        </div> </div> <div class="bottom-bar">
-        <div class="container-full bottom-bar-content">
-            <div class="selected-badge" id="selected-count-balloon">
-                Nenhum laudo selecionado
-            </div>
-            
-            <div class="export-controls">
-                <span class="export-label">Opções para exportação dos laudos:</span>
-                
-                <div class="dropdown">
-                    <button class="btn-outline dropdown-toggle" id="dropdown-btn">
-                        <span id="selected-format-text">Selecionar formato</span> 
-                        <span class="caret">▼</span>
-                    </button>
-                    <ul class="dropdown-menu" id="dropdown-menu">
-                        <li><a href="#" data-value=".pdf">.PDF (Relatório)</a></li>
-                        <li><a href="#" data-value=".xlsx">.XLSX (Excel)</a></li>
-                    </ul>
+            <div class="bottom-bar">
+                <div class="bottom-bar-content">
+                    <div class="selected-badge hidden" id="selected-count-balloon">
+                        0 laudos selecionados
+                    </div>
+                    
+                    <div class="export-controls">
+                        <span class="export-label">Opções para exportação dos laudos:</span>
+                        
+                        <div class="dropdown">
+                            <button class="btn-outline dropdown-toggle" id="dropdown-btn">
+                                <span id="selected-format-text">Selecionar formato</span> 
+                                <span class="caret">▼</span>
+                            </button>
+                            <ul class="dropdown-menu" id="dropdown-menu">
+                                <li><a href="#" data-value=".pdf">.PDF (Relatório)</a></li>
+                                <li><a href="#" data-value=".xlsx">.XLSX (Excel)</a></li>
+                            </ul>
+                        </div>
+                        
+                        <button id="btn-download" class="btn-primary btn-download" disabled>Baixar laudos</button>
+                        <div id="download-success-msg" class="success-msg hidden">✓ Download iniciado</div>
+                    </div>
                 </div>
-                
-                <button id="btn-download" class="btn-primary btn-download" disabled>Baixar laudos</button>
-                <div id="download-success-msg" class="success-msg hidden">✓ Download iniciado</div>
             </div>
-        </div>
-    </div>
+
+        </div> 
+    </div> 
 
     <template id="template-modal-confirmacao">
         <div id="confirmation-modal" class="modal-overlay hidden">
@@ -170,6 +162,33 @@
         </div>
     </template>
 
+    <div id="details-modal" class="modal-overlay hidden">
+        <div class="modal-content modal-large">
+            <div class="modal-header-custom">
+                <div class="modal-titles">
+                    <h3 id="modal-laudo-title">Detalhes do Laudo</h3>
+                    <p>Informações completas extraídas do documento</p>
+                </div>
+                <button id="btn-close-details" class="btn-primary-small">Voltar</button>
+            </div>
+            <div class="modal-body-compact">
+                <div class="col-left">
+                    <div class="section-title">Dados sobre Localização do Imóvel</div>
+                    <div class="fields-grid" id="grid-localizacao"></div>
+                </div>
+                <div class="col-right">
+                    <div class="section-title">Características do Imóvel</div>
+                    <div class="fields-grid" id="grid-caracteristicas"></div>
+                    <div class="section-title" style="margin-top: 15px;">Dados Financeiros</div>
+                    <div class="fields-grid" id="grid-financeiros"></div>
+                    <div class="edited-note" style="margin-top:auto;">*Dados registrados no histórico</div>
+                </div>
+            </div>
+            <div class="modal-footer-custom"></div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
     <script src="TelaHistoricoLaudos.js"></script>
 </body>
 </html>
