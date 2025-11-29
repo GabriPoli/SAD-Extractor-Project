@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAD-Extractor | Histórico de Usuários</title>
+    <link rel="stylesheet" href="historico_usuarios.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-top container-full">
+            <div class="header-brand">
+                <div class="logo-box">
+                    <svg class="icon-doc" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <div class="brand-text">
+                        <h1>SAD Extractor</h1>
+                        <span>Sistema de Extração de dados imobiliários</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-logos">
+                <img src="/images/logoSADGovPE.png" alt="Governo de Pernambuco" class="gov-logo"> 
+            </div>
+        </div>
+
+        <div class="header-nav container-full">
+            <nav class="nav-links">
+                <a href="#">Upload de documentos</a>
+                <span class="divider">|</span>
+                <a href="#">Editar dados</a>
+                <span class="divider">|</span>
+                <a href="#">Histórico de Laudos</a>
+                <span class="divider">|</span>
+                <a href="#" class="active">Histórico de usuários</a>
+                <span class="divider">|</span>
+                <a href="#">Indicadores</a>
+                <span class="divider">|</span>
+                <a href="#">Configurações</a>
+            </nav>
+            <div class="user-info">
+                <span>Olá, <strong>Nome do usuário</strong></span>
+                <div class="avatar">TT</div>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <div class="main-card">
+            
+            <div class="page-header">
+                <h2>Histórico de Usuários</h2>
+                <p>Acompanhe as atividades e modificações realizadas pelos usuários no sistema.</p>
+            </div>
+
+            <div class="search-section">
+                <form class="search-grid">
+                    <div class="form-group" style="flex-grow: 2;">
+                        <label>Buscar Usuário ou Documento</label>
+                        <div class="input-icon-wrapper">
+                            <input type="text" class="form-control" placeholder="Digite nome, e-mail ou nome do laudo...">
+                            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Ação</label>
+                        <select class="form-control">
+                            <option value="">Todas</option>
+                            <option value="Upload">Upload</option>
+                            <option value="Edição">Edição</option>
+                            <option value="Exclusão">Exclusão</option>
+                            <option value="Exportação">Exportação</option>
+                        </select>
+                    </div>
+                    <div class="form-group action-group">
+                        <button type="button" class="btn-primary">Filtrar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="section-divider">
+                <h3>Registros de atividades</h3>
+            </div>
+
+            <div class="table-card-inner">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuário <span class="sort-icon">⇅</span></th>
+                                <th>Ação <span class="sort-icon">⇅</span></th>
+                                <th>Nome do Laudo <span class="sort-icon">⇅</span></th>
+                                <th>Data de Modificação <span class="sort-icon">⇅</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div class="table-footer">
+                    <div class="footer-left">
+                        <span class="info-text">Visualizando registros do sistema</span>
+                    </div>
+                    <div id="pagination-wrapper" class="footer-right"></div>
+                </div>
+            </div>
+
+        </div> 
+    </div>
+
+    <script src="historico_usuarios.js"></script>
+</body>
+</html>
