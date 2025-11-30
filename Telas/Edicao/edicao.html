@@ -91,8 +91,7 @@
                             </tr>
                         </thead>
                         <tbody id="table-body">
-                            <!-- Dados serão inseridos via JavaScript -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
 
@@ -115,7 +114,6 @@
         </div> 
     </div>
 
-    <!-- Modal de Confirmação -->
     <div id="confirmation-modal" class="modal-overlay hidden">
         <div class="modal-content modal-delete">
             <h3>Confirmar Ação</h3>
@@ -123,6 +121,51 @@
             <div class="modal-actions">
                 <button id="btn-cancel-delete" class="btn-secondary">Cancelar</button>
                 <button id="btn-confirm-delete" class="btn-danger">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="details-modal" class="modal-overlay hidden">
+        <div class="modal-content modal-large">
+            <div class="modal-header-custom">
+                <div class="modal-titles">
+                    <h3 id="modal-laudo-title">Detalhes do Laudo</h3>
+                    <p>Informações completas extraídas do documento</p>
+                </div>
+                <button id="btn-close-details" class="btn-primary-small">Voltar</button>
+            </div>
+
+            <div class="modal-body-compact">
+                <div class="col-left">
+                    <div class="section-title">Dados sobre Localização do Imóvel</div>
+                    <div class="fields-grid" id="grid-localizacao"></div>
+                </div>
+
+                <div class="col-right">
+                    <div class="section-title">Características do Imóvel</div>
+                    <div class="fields-grid" id="grid-caracteristicas"></div>
+
+                    <div class="section-title" style="margin-top: 15px;">Dados Financeiros</div>
+                    <div class="fields-grid" id="grid-financeiros"></div>
+                    
+                    <div class="edited-note">*Dados editados pelo usuário</div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom">
+                <div id="success-message" class="success-badge hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                    Dados editados
+                </div>
+                <button id="btn-edit-mode" class="btn-primary-large icon-btn" style="min-width:auto;">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg>
+                    Editar Dados
+                </button>
+                <button id="btn-save-changes" class="btn-save-green hidden">
+                    Salvar Alterações
+                </button>
             </div>
         </div>
     </div>
