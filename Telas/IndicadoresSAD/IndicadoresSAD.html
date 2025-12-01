@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Indicadores - Extração de Laudos</title>
+    <link rel="stylesheet" href="IndicadoresSAD.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-top container-full">
+            <div class="header-brand">
+                <div class="logo-box">
+                    <svg class="icon-doc" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <div class="brand-text">
+                        <h1>SAD Extractor</h1>
+                        <span>Sistema de Extração de dados imobiliários</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-logos">
+                <img src="/images/logoSADGovPE.png" alt="Governo de Pernambuco" class="gov-logo"> 
+            </div>
+        </div>
+
+        <div class="header-nav container-full">
+            <nav class="nav-links">
+                <a href="../Dashboard_Cadastro/Upload/upload.html">Upload de documentos</a>
+                <span class="divider">|</span>
+                <a href="../../Edicao/edicao.html">Editar dados</a>
+                <span class="divider">|</span>
+                <a href="../../Historico_Laudos/TelaHistoricoLaudos.html">Histórico de Laudos</a>
+                <span class="divider">|</span>
+                <a href="../Historico_Usuarios/historico_usuarios.html">Histórico de usuários</a>
+                <span class="divider">|</span>
+                <a href="IndicadoresSAD.html" class="active">Indicadores</a>
+                <span class="divider">|</span>
+                <a href="../Gerenciamento_Usuários/TelaGerenciamento.html">Configurações</a>
+            </nav>
+            <div class="user-info">
+                <span>Olá, <strong>Nome do usuário</strong></span>
+                <div class="avatar">TT</div>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+        </div>
+    </header>
+    <div class="dashboard-container">
+        <header>
+            <h1>Painel de Indicadores</h1>
+            <p>Principais métricas e acompanhamentos sobre os dados de Extração de Laudos</p>
+        </header>
+
+        <div class="indicator-cards">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Total Extraído</h2>
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <p class="main-value" id="total-extracted-value">126.560</p>
+                <div class="sub-data">
+                    <p class="change-info">
+                        <span class="positive">Mês a Mês 🔼 12%</span> | Laudos por Dia: 8.846
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Média Diária</h2>
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <p class="main-value" id="daily-average-value">8.846</p>
+                <div class="sub-data">
+                    <p class="small-text">Variação Semanal:</p>
+                    <canvas id="daily-avg-chart-mini"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Confiabilidade Média</h2>
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <p class="main-value" id="reliability-value">95,60%</p>
+                <div class="sub-data">
+                    <p class="change-info">
+                        <span class="negative">Mês a Mês 🔽 5%</span> | Taxa de Conversão: 90%
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Extração Eficiente</h2>
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <p class="main-value" id="efficiency-value">78%</p>
+                <div class="sub-data">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 78%;"></div>
+                    </div>
+                    <p class="change-info">
+                        <span class="positive">Mês a Mês 🔼 12%</span> | Mês Anterior: 66%
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="chart-section">
+                <div class="tabs">
+                    <button class="tab-button active">Extrações</button>
+                    <button class="tab-button">Confiabilidade</button>
+                </div>
+
+                <div class="time-filters">
+                    <button class="filter-button active" data-period="day">Diário</button>
+                    <button class="filter-button" data-period="week">Semanal</button>
+                    <button class="filter-button" data-period="month">Mensal</button>
+                    <button class="filter-button" data-period="year">Anual</button>
+                    <input type="date" value="2024-01-01">
+                    <span>-</span>
+                    <input type="date" value="2024-12-31">
+                </div>
+
+                <h3>Tendência de Extração de Laudos</h3>
+                <div class="chart-container">
+                    <canvas id="extraction-trend-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="ranking-section">
+                <h3>Ranking de Confiabilidade</h3>
+                <ul id="reliability-ranking">
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="IndicadoresSAD.js"></script>
+</body>
+</html>
