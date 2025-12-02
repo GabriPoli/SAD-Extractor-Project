@@ -180,3 +180,58 @@ tbody td { padding: 14px 15px; border-bottom: 1px solid #f3f4f6; font-size: 0.9r
 
 /* Responsividade Mobile */
 @media (max-height: 700px) { .modal-body-compact { overflow-y: auto; } }
+
+/* Adicione esta parte geral */
+.user-info {
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-width: 120px;
+    z-index: 1000;
+    display: none;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.2s;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+    background: #f5f5f5;
+    color: #0056b3;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Para ocultar links do menu */
+.nav-links a[style*="display: none"] + .divider {
+    display: none !important;
+}
+
+.divider[style*="display: none"] {
+    display: none !important;
+}

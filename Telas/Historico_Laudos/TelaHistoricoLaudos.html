@@ -6,6 +6,8 @@
     <title>SAD-Extractor | Histórico de Laudos</title>
     <link rel="stylesheet" href="TelaHistoricoLaudos.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Incluir auth.js -->
+    <script src="../../js/auth.js"></script>
 </head>
 <body>
 
@@ -27,7 +29,7 @@
 
         <div class="header-nav container-full">
             <nav class="nav-links">
-                <a href="../Dashboard_Cadastro/Upload/upload.html">Upload de documentos</a>
+                <a href="../Upload/upload.html">Upload de documentos</a>
                 <span class="divider">|</span>
                 <a href="../Edicao/edicao.html">Editar dados</a>
                 <span class="divider">|</span>
@@ -39,10 +41,14 @@
                 <span class="divider">|</span>
                 <a href="../Gerenciamento_Usuários/TelaGerenciamento.html">Configurações</a>
             </nav>
-            <div class="user-profile">
-                <span>Olá, <strong>Nome do usuário</strong></span>
-                <div class="avatar">TT</div>
+            <div class="user-profile" id="userInfo">
+                <span>Olá, <strong id="userName">Carregando...</strong></span>
+                <div class="avatar" id="userAvatar">TT</div>
                 <span class="dropdown-arrow">▼</span>
+                <!-- Menu dropdown para logout -->
+                <div class="dropdown-menu" id="dropdownMenu" style="display: none;">
+                    <a href="#" id="logoutLink">Sair</a>
+                </div>
             </div>
         </div>
     </header>
@@ -189,6 +195,79 @@
     </div>
 
     <div id="toast-container"></div>
+
+    <!-- Script de autenticação -->
+    <script>
+        // Verificar autenticação ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Verifica se o usuário está logado
+            if (!auth.estaLogado()) {
+                alert('Você precisa fazer login para acessar esta página.');
+                window.location.href = '../../../Tela_de_Login/telaLogin.html';
+                return;
+            }
+
+            // 2. Verifica permissão para esta página específica
+            if (!auth.podeAcessarPagina('TelaHistoricoLaudos.html')) {
+                alert('Você não tem permissão para acessar esta página.');
+                // Redireciona para uma página que o usuário tem acesso
+                window.location.href = '../Dashboard_Cadastro/Upload/upload.html';
+                return;
+            }
+
+            // 3. Atualizar informações do usuário na interface
+            document.getElementById('userName').textContent = auth.getNomeUsuario();
+            
+            // Configurar avatar com iniciais
+            const avatar = document.getElementById('userAvatar');
+            const nome = auth.getNomeUsuario();
+            const iniciais = nome.split(' ').map(n => n[0]).join('').toUpperCase();
+            avatar.textContent = iniciais.substring(0, 2);
+
+            // 4. Configurar menu dropdown
+            const userInfo = document.getElementById('userInfo');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const logoutLink = document.getElementById('logoutLink');
+
+            userInfo.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
+            });
+
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('usuarioLogado');
+                
+                // Caminho FIXO para todas as páginas
+                // Ajuste conforme necessário:
+                window.location.href = '../Tela_de_Login/telaLogin.html';
+            });
+
+            // Fechar dropdown ao clicar fora
+            document.addEventListener('click', function() {
+                dropdownMenu.style.display = 'none';
+            });
+
+            // 5. Esconder links que o usuário não tem permissão
+            const linksParaEsconder = {
+                'historico_usuarios': document.querySelector('a[href*="historico_usuarios"]'),
+                'indicadores': document.querySelector('a[href*="IndicadoresSAD"]'),
+                'configuracoes': document.querySelector('a[href*="TelaGerenciamento"]')
+            };
+
+            for (const [permissao, elemento] of Object.entries(linksParaEsconder)) {
+                if (elemento && !auth.temPermissao(permissao)) {
+                    elemento.style.display = 'none';
+                    // Esconder o divisor anterior se existir
+                    const divisorAnterior = elemento.previousElementSibling;
+                    if (divisorAnterior && divisorAnterior.classList.contains('divider')) {
+                        divisorAnterior.style.display = 'none';
+                    }
+                }
+            }
+        });
+    </script>
+
     <script src="TelaHistoricoLaudos.js"></script>
 </body>
 </html>
