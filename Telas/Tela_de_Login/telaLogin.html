@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>SAD-Extractor | Login</title>
-    <!-- Link para o CSS Moderno e Fluido -->
     <link rel="stylesheet" href="telaLogin.css">
+    <!-- Caminho correto para auth.js -->
+    <script src="../../js/auth.js"></script>
 </head>
 <body>
-    <!-- O contêiner principal utiliza Flexbox para centralizar, conforme princípio [3] -->
     <div class="login-container">
         <header class="login-header">
             <h1>SAD-Extractor</h1>
@@ -26,14 +26,65 @@
             </div>
             
             <a href="#" class="forgot-password">Esqueci minha senha</a>
-
             <button type="submit" id="submitBtn">Entrar</button>
-            
-            <!-- Link adicional do exemplo -->
             <a href="#" class="signup-link">Ainda não tenho uma conta</a>
         </form>
+        
+        <div class="test-credentials">
+            <h3>Credenciais de Teste:</h3>
+            <p><strong>Cadastro:</strong> cadastro@sad.pe.gov.br</p>
+            <p><strong>Gestor:</strong> gestor@sad.pe.gov.br</p>
+            <p><strong>Admin:</strong> admin@sad.pe.gov.br</p>
+            <p><em>Senha: qualquer valor</em></p>
+        </div>
     </div>
-    <!-- Script para a Lógica de Redirecionamento (Conforme Requisito) -->
-    <script src="telaLogin.js"></script>
+    
+    <script>
+        // Limpar sessão anterior
+        if (sessionStorage.getItem('usuarioLogado')) {
+            sessionStorage.removeItem('usuarioLogado');
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const emailInput = document.getElementById('email').value.trim().toLowerCase();
+            const senhaInput = document.getElementById('senha').value;
+
+            let userData = {
+                email: emailInput,
+                nome: '',
+                tipo: '',
+                redirectUrl: '',
+                permissoes: []
+            };
+
+            if (emailInput === 'cadastro@sad.pe.gov.br') {
+                userData.nome = 'Usuário de Cadastro';
+                userData.tipo = 'cadastro';
+                userData.redirectUrl = '../Upload/upload.html';
+                userData.permissoes = ['upload', 'edicao', 'exportacao', 'historico_laudos'];
+                
+            } else if (emailInput === 'gestor@sad.pe.gov.br') {
+                userData.nome = 'Gestor do Sistema';
+                userData.tipo = 'gestor';
+                userData.redirectUrl = '../Upload/upload.html';
+                userData.permissoes = ['upload', 'edicao', 'exportacao', 'historico_laudos', 'historico_usuarios', 'indicadores'];
+                
+            } else if (emailInput === 'admin@sad.pe.gov.br') {
+                userData.nome = 'Administrador do Sistema';
+                userData.tipo = 'admin';
+                userData.redirectUrl = '../Upload/upload.html';
+                userData.permissoes = ['upload', 'edicao', 'exportacao', 'historico_laudos', 'historico_usuarios', 'indicadores', 'configuracoes'];
+                
+            } else {
+                alert(`Falha! E-mail [${emailInput}] não reconhecido.`);
+                return;
+            }
+
+            sessionStorage.setItem('usuarioLogado', JSON.stringify(userData));
+            alert(`Sucesso! Bem-vindo, ${userData.nome}`);
+            window.location.href = userData.redirectUrl;
+        });
+    </script>
 </body>
 </html>

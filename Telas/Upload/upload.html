@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAD-Extractor | Histórico de Usuários</title>
-    <link rel="stylesheet" href="historico_usuarios.css">
+    <title>SAD-Extractor | Upload de Documentos</title>
+    <link rel="stylesheet" href="upload.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Incluir auth.js -->
     <script src="../../js/auth.js"></script>
@@ -29,13 +29,12 @@
 
         <div class="header-nav container-full">
             <nav class="nav-links">
-                <a href="../Upload/upload.html">Upload de documentos</a>
-                <span class="divider">|</span>
+                <a href="upload.html" class="active">Upload de documentos</a> <span class="divider">|</span>
                 <a href="../Edicao/edicao.html">Editar dados</a>
                 <span class="divider">|</span>
                 <a href="../Historico_Laudos/TelaHistoricoLaudos.html">Histórico de Laudos</a>
                 <span class="divider">|</span>
-                <a href="../Historico_Usuarios/historico_usuarios.html" class="active">Histórico de usuários</a>
+                <a href="../Historico_Usuarios/historico_usuarios.html">Histórico de usuários</a>
                 <span class="divider">|</span>
                 <a href="../IndicadoresSAD/IndicadoresSAD.html">Indicadores</a>
                 <span class="divider">|</span>
@@ -54,68 +53,56 @@
     </header>
 
     <div class="app-container">
+        
+        <div class="stepper-container">
+            <div class="step active">
+                <div class="step-circle">1</div>
+                <span class="step-label">Upload</span>
+            </div>
+            <div class="step-line completed"></div>
+            
+            <div class="step">
+                <div class="step-circle">2</div>
+                <span class="step-label">Edição</span>
+            </div>
+            <div class="step-line"></div>
+            
+            <div class="step">
+                <div class="step-circle">3</div>
+                <span class="step-label">Exportação</span>
+            </div>
+        </div>
+
         <div class="main-card">
             
             <div class="page-header">
-                <h2>Histórico de Usuários</h2>
-                <p>Acompanhe as atividades e modificações realizadas pelos usuários no sistema.</p>
+                <h2>Upload dos documentos</h2>
+                <p>Faça Upload de arquivos PDF para extrair automaticamente os dados dos laudos desejados.</p>
             </div>
 
-            <div class="search-section">
-                <form class="search-grid">
-                    <div class="form-group" style="flex-grow: 2;">
-                        <label>Buscar Usuário ou Documento</label>
-                        <div class="input-icon-wrapper">
-                            <input type="text" class="form-control" placeholder="Digite nome, e-mail ou nome do laudo...">
-                            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Tipo de Ação</label>
-                        <select class="form-control">
-                            <option value="">Todas</option>
-                            <option value="Upload">Upload</option>
-                            <option value="Edição">Edição</option>
-                            <option value="Exclusão">Exclusão</option>
-                            <option value="Exportação">Exportação</option>
-                        </select>
-                    </div>
-                    <div class="form-group action-group">
-                        <button type="button" class="btn-primary">Filtrar</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="section-divider">
-                <h3>Registros de atividades</h3>
-            </div>
-
-            <div class="table-card-inner">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Usuário <span class="sort-icon">⇅</span></th>
-                                <th>Ação <span class="sort-icon">⇅</span></th>
-                                <th>Nome do Laudo <span class="sort-icon">⇅</span></th>
-                                <th>Data de Modificação <span class="sort-icon">⇅</span></th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                            </tbody>
-                    </table>
+            <div id="dropZone" class="drop-zone">
+                <div class="upload-content">
+                    <svg class="upload-icon-svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    
+                    <p class="drop-text">
+                        Arraste os arquivos aqui ou <a href="#" id="selectFileLink">clique para selecionar</a>
+                    </p>
+                    <p class="formats-text">Formatos suportados: PDF, DOCx</p>
                 </div>
-
-                <div class="table-footer">
-                    <div class="footer-left">
-                        <span class="info-text">Visualizando registros do sistema</span>
-                    </div>
-                    <div id="pagination-wrapper" class="footer-right"></div>
-                </div>
+                <input type="file" id="fileInput" multiple accept=".pdf,.docx" style="display: none;">
             </div>
 
-        </div> 
-    </div>
+            <ul id="fileList" class="file-list"></ul>
+
+            <div class="action-area hidden" id="uploadActionArea">
+                <button id="btn-processar" class="btn-primary-large">Processar Arquivos</button>
+            </div>
+
+        </div> </div>
 
     <!-- Script de autenticação -->
     <script>
@@ -129,10 +116,10 @@
             }
 
             // 2. Verifica permissão para esta página específica
-            if (!auth.podeAcessarPagina('historico_usuarios.html')) {
+            if (!auth.podeAcessarPagina('upload.html')) {
                 alert('Você não tem permissão para acessar esta página.');
-                // Redireciona para uma página que o usuário tem acesso
-                window.location.href = '../Dashboard_Cadastro/Upload/upload.html';
+                // Redireciona para o login
+                window.location.href = '../../index.html';
                 return;
             }
 
@@ -189,6 +176,6 @@
         });
     </script>
 
-    <script src="historico_usuarios.js"></script>
+    <script src="upload.js"></script>
 </body>
 </html>
