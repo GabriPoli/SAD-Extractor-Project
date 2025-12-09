@@ -864,3 +864,29 @@ tr.row-discarded .laudo-link {
 .divider[style*="display: none"] {
     display: none !important;
 }
+
+/* Tooltip simples e eficaz */
+.edited-mark {
+    color: #dc2626;
+    font-weight: bold;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Tooltip que aparece ao lado do cursor */
+.edited-mark:hover::before {
+    content: 'campo editado';
+    position: fixed;
+    background: white;
+    color: #1f2937;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 10000;
+    white-space: nowrap;
+    pointer-events: none;
+    margin-left: 10px;
+}

@@ -387,26 +387,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderDetailsFields(laudo, isEditMode) {
+        // Função para renderizar cada grupo de campos
         const renderGroup = (map, containerId) => {
             const container = document.getElementById(containerId);
+            if (!container) return;
+            
             container.innerHTML = '';
-            map.forEach(f => {
-                const val = laudo.detalhes[f.key];
-                const isMissing = !val || val === '';
-                const displayVal = isMissing ? 'Não encontrado' : val;
-                const wasEdited = laudo.camposEditados.has(f.key);
+            
+            map.forEach(field => {
+                const value = laudo.detalhes[field.key];
+                const isMissing = !value || value === '';
+                const displayValue = isMissing ? 'Não encontrado' : value;
+                const wasEdited = laudo.camposEditados.has(field.key);
                 
                 const div = document.createElement('div');
                 div.className = 'field-item';
-                const label = `<label class="field-label">${f.l}${wasEdited ? ' <span class="edited-mark">*</span>' : ''}</label>`;
                 
-                let content = '';
-                if(isEditMode) content = `<input type="text" class="edit-input" data-key="${f.key}" value="${isMissing ? '' : val}" placeholder="...">`;
-                else content = `<span class="field-value ${isMissing ? 'missing' : ''}">${displayVal}</span>`;
-                div.innerHTML = label + content;
+                // Criar label com asterisco se foi editado
+                let labelHtml = `${field.l}`;
+                if (wasEdited) {
+                    labelHtml += ' <span class="edited-mark">*</span>';
+                }
+                
+                // Conteúdo do campo (input ou texto)
+                let contentHtml = '';
+                if (isEditMode) {
+                    contentHtml = `<input type="text" class="edit-input" data-key="${field.key}" value="${isMissing ? '' : value}" placeholder="...">`;
+                } else {
+                    const missingClass = isMissing ? 'missing' : '';
+                    contentHtml = `<span class="field-value ${missingClass}">${displayValue}</span>`;
+                }
+                
+                div.innerHTML = `
+                    <label class="field-label">${labelHtml}</label>
+                    ${contentHtml}
+                `;
+                
                 container.appendChild(div);
             });
         };
+        
+        // Renderizar todos os grupos
         renderGroup(fieldMap.loc, 'grid-localizacao');
         renderGroup(fieldMap.carac, 'grid-caracteristicas');
         renderGroup(fieldMap.fin, 'grid-financeiros');
