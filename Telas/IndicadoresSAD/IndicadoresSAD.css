@@ -54,6 +54,7 @@ body {
 .header-brand, .header-logos {
     display: flex;
     align-items: center;
+    gap: 15px;
 }
 
 .logo-box {
@@ -471,4 +472,13 @@ body {
 
 .divider[style*="display: none"] {
     display: none !important;
+}
+
+.partner-logo {
+    height: 50px;        
+    width: auto;
+    object-fit: contain;
+    background-color: #ffffff; 
+    border-radius: 6px;   
+    padding: 2px;         
 }

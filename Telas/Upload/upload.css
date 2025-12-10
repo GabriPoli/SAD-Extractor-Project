@@ -30,7 +30,7 @@ body {
     width: 100%; padding: 0 40px; box-sizing: border-box;
     display: flex; justify-content: space-between; align-items: center;
 }
-.header-brand, .header-logos { display: flex; align-items: center; }
+.header-brand, .header-logos { display: flex; align-items: center; gap: 15px; }
 .logo-box { display: flex; align-items: center; gap: 12px; }
 .brand-text h1 { margin: 0; font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
 .brand-text span { font-size: 0.85rem; opacity: 0.9; font-weight: 300; display: block; }
@@ -196,4 +196,13 @@ body {
 
 .divider[style*="display: none"] {
     display: none !important;
+}
+
+.partner-logo {
+    height: 50px;        
+    width: auto;
+    object-fit: contain;
+    background-color: #ffffff; 
+    border-radius: 6px;   
+    padding: 2px;         
 }

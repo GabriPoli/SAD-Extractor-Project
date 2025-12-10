@@ -49,6 +49,7 @@ body {
 .header-logos {
     display: flex;
     align-items: center;
+    gap: 15px;
 }
 
 .logo-box {
@@ -889,4 +890,13 @@ tr.row-discarded .laudo-link {
     white-space: nowrap;
     pointer-events: none;
     margin-left: 10px;
+}
+
+.partner-logo {
+    height: 50px;        
+    width: auto;
+    object-fit: contain;
+    background-color: #ffffff; 
+    border-radius: 6px;   
+    padding: 2px;         
 }
