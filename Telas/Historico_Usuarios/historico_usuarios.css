@@ -26,7 +26,7 @@ body {
 .container-full { width: 100%; padding: 0 40px; display: flex; justify-content: space-between; align-items: center; }
 .main-header { background: linear-gradient(90deg, #0052cc 0%, #003399 100%); color: white; width: 100%; }
 .header-top { height: 80px; border-bottom: 1px solid rgba(255,255,255,0.15); }
-.header-brand, .header-logos { display: flex; align-items: center; }
+.header-brand, .header-logos { display: flex; align-items: center; gap: 15px; }
 .logo-box { display: flex; align-items: center; gap: 12px; }
 .brand-text h1 { margin: 0; font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
 .brand-text span { font-size: 0.85rem; opacity: 0.9; font-weight: 300; display: block; }
@@ -166,4 +166,13 @@ tbody td { padding: 12px 20px; border-bottom: 1px solid #f3f4f6; font-size: 0.9r
 
 .divider[style*="display: none"] {
     display: none !important;
+}
+
+.partner-logo {
+    height: 50px;        
+    width: auto;
+    object-fit: contain;
+    background-color: #ffffff; 
+    border-radius: 6px;   
+    padding: 2px;         
 }
